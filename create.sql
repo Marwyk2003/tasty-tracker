@@ -1,8 +1,8 @@
 
 CREATE TYPE unit_enum AS ENUM('ml','l', 'tsp ', 'tbsp ', 'pinch ', 'g ');
 CREATE TYPE shape_enum AS ENUM( 'rectangular ', 'round ', 'round with chimney ');
-CREATE TYPE category_enum AS ENUM( 'diary ', 'fruits ', 'vegetables ', 'dried fruits ', 'nuts ', 'cereal products ', 'sweets ', 'eggs ', 'olives, butters and oils ');
-CREATE TYPE difficulty_enum AS ENUM( 'very easy ', 'easy ', 'medium ', 'hard ', 'very hard ');
+CREATE TYPE category_enum AS ENUM( 'diary ', 'fruits', 'vegetables ', 'dried fruits ', 'nuts ', 'cereal products ', 'sweets ', 'eggs ', 'olives, butters and oils ');
+CREATE TYPE difficulty_enum AS ENUM( 'very easy', 'easy ', 'medium ', 'hard ', 'very hard ');
 
 CREATE  TABLE  forms (
 	id_form              integer  NOT NULL,
