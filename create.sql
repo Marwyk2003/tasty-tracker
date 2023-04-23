@@ -1,8 +1,8 @@
 
-CREATE TYPE unit_enum AS ENUM('ml','l', 'tsp ', 'tbsp ', 'pinch ', 'g ');
-CREATE TYPE shape_enum AS ENUM( 'rectangular ', 'round ', 'round with chimney ');
-CREATE TYPE category_enum AS ENUM( 'diary ', 'fruits', 'vegetables ', 'dried fruits ', 'nuts ', 'cereal products ', 'sweets ', 'eggs ', 'olives, butters and oils ');
-CREATE TYPE difficulty_enum AS ENUM( 'very easy', 'easy ', 'medium ', 'hard ', 'very hard ');
+CREATE TYPE unit_enum AS ENUM('ml','l', 'tsp', 'tbsp', 'pinch', 'g');
+CREATE TYPE shape_enum AS ENUM( 'rectangular', 'round', 'round with chimney');
+CREATE TYPE category_enum AS ENUM( 'diary', 'fruits', 'vegetables', 'dried fruits', 'nuts', 'cereal products', 'sweets', 'eggs', 'olives', 'butters and oils');
+CREATE TYPE difficulty_enum AS ENUM( 'very easy', 'easy', 'medium', 'hard', 'very hard');
 
 CREATE  TABLE  forms (
 	id_form              integer  NOT NULL,
@@ -30,7 +30,7 @@ CREATE  TABLE  tags (
 CREATE  TABLE  users (
 	id_user              integer  NOT NULL,
 	username             varchar(20) NOT NULL,
-	hash_password        bigint  NOT NULL,
+	hash_password        char(60)  NOT NULL,
 	created_at           timestamp DEFAULT CURRENT_DATE NOT NULL,
 	CONSTRAINT pk_users PRIMARY KEY (id_user)
 );
@@ -43,6 +43,7 @@ CREATE  TABLE  utensils (
 
 CREATE  TABLE  recipes (
 	id_recipe            integer  NOT NULL,
+	name				 varchar(100) NOT NULL,
 	id_user              integer,
 	id_form              integer,
 	added_at             timestamp DEFAULT CURRENT_DATE NOT NULL,
