@@ -29,9 +29,9 @@ CREATE  TABLE  tags (
 
 CREATE  TABLE  users (
 	id_user              integer  NOT NULL,
-	username             varchar(20),
+	username             varchar(20) NOT NULL,
 	hash_password        bigint  NOT NULL,
-	created_at           timestamp,
+	created_at           timestamp DEFAULT CURRENT_DATE NOT NULL,
 	CONSTRAINT pk_users PRIMARY KEY (id_user)
 );
 
@@ -43,7 +43,7 @@ CREATE  TABLE  utensils (
 
 CREATE  TABLE  recipes (
 	id_recipe            integer  NOT NULL,
-	id_user              integer  NOT NULL,
+	id_user              integer,
 	id_form              integer,
 	added_at             timestamp DEFAULT CURRENT_DATE NOT NULL,
 	difficulty           difficulty_enum,
