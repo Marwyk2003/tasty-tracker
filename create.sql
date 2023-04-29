@@ -5,7 +5,7 @@ CREATE TYPE category_enum AS ENUM( 'dairy and eggs', 'fruits', 'vegetables', 'dr
 CREATE TYPE difficulty_enum AS ENUM( 'very easy', 'easy', 'medium', 'hard', 'very hard');
 
 CREATE TABLE forms (
-	id_form              integer  NOT NULL,
+	id_form              serial,
 	shape                shape_enum  NOT NULL,
 	dimension1           integer  NOT NULL,
 	dimension2           integer  NOT NULL,
@@ -15,20 +15,20 @@ CREATE TABLE forms (
 ALTER TABLE forms ADD CONSTRAINT positive_dimensions CHECK (dimension1 > 0 AND dimension2 > 0);
 
 CREATE TABLE  products (
-	id_product           integer  NOT NULL,
+	id_product           serial,
 	name                 varchar(30)  NOT NULL,
 	category             category_enum  NOT NULL,
 	CONSTRAINT pk_products PRIMARY KEY (id_product)
 );
 
 CREATE TABLE tags (
-	id_tag               integer  NOT NULL,
+	id_tag               serial,
 	tag                  varchar(20)  NOT NULL,
 	CONSTRAINT pk_tags PRIMARY KEY (id_tag)
 );
 
 CREATE TABLE users (
-	id_user              integer  NOT NULL,
+	id_user              serial,
 	username             varchar(20) NOT NULL,
 	hash_password        char(60)  NOT NULL,
 	created_at           timestamp DEFAULT CURRENT_DATE NOT NULL,
@@ -36,13 +36,13 @@ CREATE TABLE users (
 );
 
 CREATE TABLE utensils (
-	id_utensil           integer  NOT NULL,
+	id_utensil           serial,
 	name                 varchar(30)  NOT NULL,
 	CONSTRAINT pk_utensils PRIMARY KEY (id_utensil)
 );
 
 CREATE TABLE recipes (
-	id_recipe            integer  NOT NULL,
+	id_recipe            serial,
 	name				 varchar(100) NOT NULL,
 	id_user              integer,
 	id_form              integer,
