@@ -1,7 +1,7 @@
 
-CREATE TYPE unit_enum AS ENUM('ml','l', 'tsp', 'tbsp', 'pinch', 'g');
+CREATE TYPE unit_enum AS ENUM('ml','l', 'tsp', 'tbsp', 'pinch', 'g', 'piece');
 CREATE TYPE shape_enum AS ENUM( 'rectangular', 'round', 'round with chimney');
-CREATE TYPE category_enum AS ENUM( 'dairy', 'fruits', 'vegetables', 'dried fruits', 'nuts', 'cereal products', 'sweet', 'eggs', 'olives', 'butters and oils');
+CREATE TYPE category_enum AS ENUM( 'dairy and eggs', 'fruits', 'vegetables', 'dried fruits and nuts', 'cereal products', 'sweet', 'butters and oils', 'spices');
 CREATE TYPE difficulty_enum AS ENUM( 'very easy', 'easy', 'medium', 'hard', 'very hard');
 
 CREATE TABLE forms (
