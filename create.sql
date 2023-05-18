@@ -1,6 +1,6 @@
-CREATE TYPE unit_enum AS ENUM('ml','l', 'tsp', 'tbsp', 'pinch', 'g', 'piece');
-CREATE TYPE shape_enum AS ENUM('rectangular', 'round', 'round with chimney');
-CREATE TYPE difficulty_enum AS ENUM('very easy', 'easy', 'medium', 'hard', 'very hard');
+CREATE TYPE unit_enum AS ENUM ('ml','l', 'tsp', 'tbsp', 'pinch', 'g', 'piece');
+CREATE TYPE shape_enum AS ENUM ('rectangular', 'round', 'round with chimney');
+CREATE TYPE difficulty_enum AS ENUM ('very easy', 'easy', 'medium', 'hard', 'very hard');
 
 CREATE TABLE forms (
 	id_form              serial,
@@ -9,18 +9,18 @@ CREATE TABLE forms (
 	dimension2           integer NOT NULL,
 	CONSTRAINT pk_forms PRIMARY KEY (id_form)
 );
-
 ALTER TABLE forms ADD CONSTRAINT positive_dimensions CHECK (dimension1 > 0 AND dimension2 > 0);
 
 CREATE TABLE products (
 	id_product           serial,
 	name                 varchar(30) NOT NULL,
-	id_category             int NOT NULL,
+	id_category          integer NOT NULL,
 	CONSTRAINT pk_products PRIMARY KEY (id_product)
 );
-CREATE TABLE category(
-	id_category serial,
-	name varchar(60) NOT NULL, 
+
+CREATE TABLE categories (
+	id_category 	     serial,
+	category 	     varchar(60) NOT NULL, 
 	CONSTRAINT pk_category PRIMARY KEY (id_category)
 );
 
@@ -31,8 +31,8 @@ CREATE TABLE tags (
 );
 
 CREATE TABLE restrictions(
-	id_restriction serial,
-	restriction varchar(60) NOT NULL,
+	id_restriction 	     serial,
+	restriction 	     varchar(60) NOT NULL,
 	CONSTRAINT pk_restrictions PRIMARY KEY (id_restriction)
 );
 
@@ -46,58 +46,42 @@ CREATE TABLE users (
 
 CREATE TABLE utensils (
 	id_utensil           serial,
-	name                 varchar(30) NOT NULL,
+	utensil              varchar(30) NOT NULL,
 	CONSTRAINT pk_utensils PRIMARY KEY (id_utensil)
 );
 
 CREATE TABLE recipes (
 	id_recipe            serial,
-	name				 varchar(100) NOT NULL,
+	name		     varchar(100) NOT NULL,
 	id_user              integer,
 	id_form              integer,
 	added_at             timestamp DEFAULT CURRENT_DATE NOT NULL,
 	difficulty           difficulty_enum,
 	preparation_time     interval,
 	body                 text NOT NULL,
-	source_type int,
-	id_source int,
+	source_type 	     integer,
+	id_source 	     integer,
 	CONSTRAINT pk_recipes PRIMARY KEY (id_recipe)
 );
-/*idk czy source types jest potrzebne, moze da sie jakos inaczej zrobic, to cale sie wydaje sus*/
-----
-CREATE TABLE source_types(
-	id_source_type serial,
-	source_type_name varchar(60),
-	CONSTRAINT pk_source_types PRIMARY KEY(id_source_type)
+
+CREATE TABLE sources (
+	id_source            serial,
+	source 		     varchar(300) NOT NULL,
+	CONSTRAINT pk_source_external PRIMARY KEY(id_source)
 );
 
-CREATE TABLE source_internal(
-	id int,
-	id_source int NOT NULL,
-	id_recipe int  NULL, 
-	CONSTRAINT pk_source_internal PRIMARY KEY(id),
-	CONSTRAINT source_recipe CHECK(id_source!=id_recipe)
-);
-CREATE TABLE source_external(
-	id int,
-	source varchar(300) NOT NULL,
-	id_recipe int NOT NULL,
-	CONSTRAINT pk_source_external PRIMARY KEY(id)
-);
-----
-CREATE TABLE archival_recipes(
-	id_archival_reicpe serial,
-	id_recipe int NOT NULL,
-	name				 varchar(100) NOT NULL,
+CREATE TABLE archival_recipes (
+	id_archival_reicpe   serial,
+	id_recipe            integer NOT NULL,
+	name		     varchar(100) NOT NULL,
 	id_user              integer,
 	id_form              integer,
-	added_at             timestamp DEFAULT CURRENT_DATE NOT NULL,
+	added_at             timestamp NOT NULL,
 	difficulty           difficulty_enum,
 	preparation_time     interval,
 	body                 text NOT NULL,
 	CONSTRAINT pk_archival_recipes PRIMARY KEY (id_archival_reicpe)
 );
-
 ALTER TABLE recipes ADD CONSTRAINT positive_time CHECK (preparation_time > '0 seconds');
 
 CREATE TABLE recipes_products (
@@ -105,105 +89,86 @@ CREATE TABLE recipes_products (
 	id_product           integer NOT NULL,
 	unit                 unit_enum NOT NULL,
 	amount               integer NOT NULL,
-	CONSTRAINT pk_recipe_products PRIMARY KEY(id_recipe,id_product)  
+	CONSTRAINT pk_recipe_products PRIMARY KEY(id_recipe, id_product)
 );
-
 ALTER TABLE recipes_products ADD CONSTRAINT positive_amount CHECK (amount > 0);
 
 CREATE TABLE recipes_tags (
 	id_recipe            integer NOT NULL,
 	id_tag               integer NOT NULL,
-	CONSTRAINT pk_recipe_tags PRIMARY KEY(id_recipe,id_tag)  
+	CONSTRAINT pk_recipe_tags PRIMARY KEY(id_recipe, id_tag)
 );
-CREATE TABLE products_restrictions(
-	id_product int NOT NULL,
-	id_restriction int NOT NULL,
-	CONSTRAINT pk_products_restrictions PRIMARY KEY(id_product,id_restriction)
+
+CREATE TABLE products_restrictions (
+	id_product	     integer NOT NULL,
+	id_restriction	     integer NOT NULL,
+	CONSTRAINT pk_products_restrictions PRIMARY KEY(id_product, id_restriction)
 );
 
 CREATE TABLE recipes_utensils (
-	id_recipe integer NOT NULL,
-	id_utensil integer NOT NULL,
+	id_recipe      	     integer NOT NULL,
+	id_utensil	     integer NOT NULL,
 	CONSTRAINT pk_recipes_utensils PRIMARY KEY (id_recipe, id_utensil)
 );
 
 CREATE TABLE users_liked (
 	id_recipe            integer NOT NULL,
 	id_user              integer NOT NULL,
-	CONSTRAINT pk_users_liked PRIMARY KEY(id_recipe,id_user)  
+	CONSTRAINT pk_users_liked PRIMARY KEY(id_recipe, id_user)
 );
 
-CREATE TABLE users_liked_comments(
-	id_comment int NOT NULL,
-	id_user int NOT NULL,
-	CONSTRAINT pk_users_liked_comments PRIMARY KEY(id_comment,id_user)
+CREATE TABLE users_liked_comments (
+	id_comment  	     integer NOT NULL,
+	id_user 	     integer NOT NULL,
+	CONSTRAINT pk_users_liked_comments PRIMARY KEY(id_comment, id_user)
 );
 
-CREATE TABLE notes(
-	id_note serial,
-	id_recipe int NOT NULL,
-	id_user int NOT NULL,
-	body text NOT NULL,
+CREATE TABLE notes (
+	id_note              serial,
+	id_recipe 	     integer NOT NULL,
+	id_user 	     integer NOT NULL,
+	body 		     text NOT NULL,
 	CONSTRAINT pk_notes PRIMARY KEY (id_note)
 );
 
-CREATE TABLE comments(
-	id_comment serial,
-	id_recipe int NOT NULL,
-	id_user int NOT NULL,
-	id_parent int,
-	body text NOT NULL,
+CREATE TABLE comments (
+	id_comment 	     serial,
+	id_recipe 	     integer NOT NULL,
+	id_user 	     integer NOT NULL,
+	id_parent 	     integer,
+	body 		     text NOT NULL,
 	CONSTRAINT pk_comments PRIMARY KEY(id_comment)
 );
 
 ALTER TABLE recipes ADD CONSTRAINT fk_recipes_user FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE SET NULL;
-
-ALTER TABLE recipes ADD CONSTRAINT fk_recipes_source_type FOREIGN KEY (source_type) REFERENCES source_types(id_source_type);
-
-ALTER TABLE source_external ADD CONSTRAINT fk_external_recipe FOREIGN KEY (id_recipe) REFERENCES recipes(id_recipe);
-
-ALTER TABLE source_internal ADD CONSTRAINT fk_internal_recipe FOREIGN KEY (id_recipe) REFERENCES recipes(id_recipe);
-
-ALTER TABLE source_internal ADD CONSTRAINT fk_internal_source FOREIGN KEY (id_source) REFERENCES recipes(id_recipe);
-
-ALTER TABLE products ADD CONSTRAINT fk_products_category FOREIGN KEY (id_category) REFERENCES category(id_category);
-
 ALTER TABLE recipes ADD CONSTRAINT fk_recipes_form FOREIGN KEY (id_form) REFERENCES forms(id_form);
 
-ALTER TABLE recipes_products ADD CONSTRAINT fk_recipes_products_recipe FOREIGN KEY (id_recipe) REFERENCES recipes(id_recipe);
+ALTER TABLE products ADD CONSTRAINT fk_products_category FOREIGN KEY (id_category) REFERENCES categories(id_category);
 
+ALTER TABLE recipes_products ADD CONSTRAINT fk_recipes_products_recipe FOREIGN KEY (id_recipe) REFERENCES recipes(id_recipe);
 ALTER TABLE recipes_products ADD CONSTRAINT fk_recipes_products_product FOREIGN KEY (id_product) REFERENCES products(id_product);
 
 ALTER TABLE archival_recipes ADD CONSTRAINT fk_archival_recipes FOREIGN KEY (id_recipe) REFERENCES recipes(id_recipe);
 
 ALTER TABLE recipes_tags ADD CONSTRAINT fk_recipes_tags_tag FOREIGN KEY (id_tag) REFERENCES tags(id_tag);
-
 ALTER TABLE recipes_tags ADD CONSTRAINT fk_recipes_tags_recipe FOREIGN KEY (id_recipe) REFERENCES recipes(id_recipe);
 
 ALTER TABLE products_restrictions ADD CONSTRAINT fk_products_restrictions_product FOREIGN KEY (id_product) REFERENCES products(id_product);
-
 ALTER TABLE products_restrictions ADD CONSTRAINT fk_products_restrictions_restriction FOREIGN KEY (id_restriction) REFERENCES restrictions(id_restriction);
 
 ALTER TABLE recipes_utensils ADD CONSTRAINT fk_recipes_utensils_recipe FOREIGN KEY (id_recipe) REFERENCES recipes(id_recipe) ON DELETE CASCADE;
-
 ALTER TABLE recipes_utensils ADD CONSTRAINT fk_recipes_utensils_utensil FOREIGN KEY (id_utensil) REFERENCES utensils(id_utensil);
 
-
-
 ALTER TABLE notes ADD CONSTRAINT fk_notes_recipe FOREIGN KEY (id_recipe) REFERENCES recipes(id_recipe);
-
 ALTER TABLE notes ADD CONSTRAINT fk_notes_user FOREIGN KEY (id_user) REFERENCES users(id_user);
 
 ALTER TABLE comments ADD CONSTRAINT fk_comment_recipe FOREIGN KEY (id_recipe) REFERENCES recipes(id_recipe);
-
 ALTER TABLE comments ADD CONSTRAINT fk_comment_user FOREIGN KEY (id_user) REFERENCES users(id_user);
 
 ALTER TABLE users_liked ADD CONSTRAINT fk_users_liked_user FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE;
-
 ALTER TABLE users_liked ADD CONSTRAINT fk_users_liked_recipe FOREIGN KEY (id_recipe) REFERENCES recipes(id_recipe) ON DELETE CASCADE;
 
 ALTER TABLE users_liked_comments ADD CONSTRAINT fk_users_liked_user_comments FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE;
-
 ALTER TABLE users_liked_comments ADD CONSTRAINT fk_users_liked_recipe_comments FOREIGN KEY (id_comment) REFERENCES comments(id_comment) ON DELETE CASCADE;
 
 /*INSERT INTO forms VALUES
