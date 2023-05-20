@@ -303,3 +303,134 @@ INSERT INTO users_liked VALUES
 	(2, 13),
 	(2, 15),
 	(3, 1);*/
+/*INSERT INTO forms VALUES 
+(1, 'rectangular tin', 30, 20),
+(2, 'muffin tin', 36, 26),
+(3, 'round tin', 22, 22),
+(4, 'rectangular tin', 36, 26),
+(5, 'round tin with chimney', 22, 22),
+(6, 'rectangular tin', 40, 25),
+(7, 'ovenproof dish', 30, 19),
+(8, 'round tin', 20, 20),
+(9, 'rectangular tin', 37, 27),
+(10, 'tart tin', 23, 23),
+(11, 'rectangular tin', 33, 23),
+(12, 'rectangular tin', 50, 40),
+(13, 'round tin', 25, 25),
+(14, 'round tin', 23, 23),
+(15, 'round tin', 30, 30),
+(16, 'round tin', 26, 26),
+(17, 'rectangular tin', 23, 23),
+(18, 'rectangular tin', 33, 22)
+;
+INSERT INTO sources VALUES 
+(1, 'https://www.waitrose.com/ecom/recipe/blueberry-lemon-thyme-friands'),
+(2, 'https://www.waitrose.com/ecom/recipe/chocolate-and-salted-caramel-traybake')
+;
+INSERT INTO categories VALUES (1, 'healthy');
+INSERT INTO recipes VALUES 
+(1, 'Strawberry Cardamon Cake', 2, 1, current_timestamp-'38 hours 22 minutes'::interval, 'easy', '55 minutes '::interval, '
+Step 1: Preheat the oven to 190°C, gas mark 5. Grease and line a 30cm x 20cm cake tin. In a mixing bowl, use an electric hand mixer to beat the butter and sugar for 5-8 minutes until pale and fluffy. Beat in the eggs, one at a time, with 1 tbsp flour. Sieve in the remaining flour, baking powder and salt, then fold to combine. Fold in the milk, cardamom, vanilla and strawberry chunks.
+Step 2: Pour into the cake tin and bake for 20-30 minutes until golden and risen; a skewer inserted into the centre should come out clean. Cool in the tin for 15 minutes, then remove from the tin; transfer to a wire rack to cool completely.
+Step 3: To make the icing, in a large mixing bowl, use an electric hand mixer to beat the butter for 5 minutes until pale and fluffy. Working in 3 batches, gradually beat in the icing sugar. Add the salt, vanilla and milk; beat for 1 minute. Spread over the top of the cooled cake. It will keep in the fridge for 4 days; cut the remaining strawberries into wedges and arrange on top before serving.
+', 2, 2),
+(2, 'Bluberyry Lemon Thyme Friands', 4, 2, current_timestamp-'42 hours 28 minutes'::interval, 'easy', '60 minutes '::interval, '
+Step 1: Preheat the oven to 180°C, gas mark 4. Melt 200g butter in a small saucepan over a low heat, then tip into a bowl and set aside to cool for 15 minutes. Meanwhile, melt the remaining 10g butter in the same pan and use to grease a 12-hole muffin tin. Dust the muffin holes with flour, tilting to coat the sides, then tap out the excess; chill.
+Step 2: Sift the flour and icing sugar into a large bowl, then add the ground almonds and salt; mix to combine. Put the egg whites in a separate bowl and use a fork to froth them up for a few seconds. Pour into the dry ingredients with the cooled, melted butter. Stir until incorporated, then add the lemon zest, juice and lemon thyme. Mix into a batter. Fold through 50g blueberries.
+Step 3: Remove the muffin tin from the fridge and divide the batter between the 12 holes. Scatter over the flaked almonds and add a few blueberries to each. Bake for 30-35 minutes until golden and a skewer inserted comes out clean. Leave to cool for 10-15 minutes before easing the friands from the tin. Allow to cool completely. 
+Step 4: For the icing, sift the icing sugar into a bowl and stir in the lemon juice. Drizzle over the cakes and scatter over extra lemon thyme leaves. 
+', 1, 1),
+(3, 'Chocolate and Salted Caramel Traybake', 5, 18, current_timestamp-'39 hours 41 minutes'::interval, 'hard', '55 minutes '::interval, '
+Step 1: Preheat the oven to 180oC, gas mark 4; lightly grease a 33cm x 22cm cake tin and line with baking parchment. Using an electric hand mixer, cream together the butter and sugar in a large mixing bowl for 2-3 minutes until light and fluffy. Beat in the eggs, one at a time, then stir in the vanilla and melted chocolate. Next, stir in the buttermilk until combined.
+Step 2: Mix together the flour, bicarbonate of soda, cocoa powder and salt, then sift into the mixture and fold in until combined. Tip into the cake tin, level the top and bake for 22-25 minutes until risen and a skewer inserted into the centre comes out clean. Set aside to cool completely in the tin.
+Step 3: Remove the cooled caked from the tin. Spread the icing evenly over the top, then drizzle with the 30g melted chocolate for the topping. Allow to set for 5 minutes, then scatter over the raspberries, slice into squares and serve with crème fraîche or whipped cream, if liked.
+', 1, 2)
+;
+INSERT INTO products VALUES 
+(1, 'unsalted butter', 1),
+(2, 'caster sugar', 1),
+(3, 'blacktailfreeeggs', 1),
+(4, 'selfraising flour', 1),
+(5, 'baking powder', 1),
+(6, 'fine salt', 1),
+(7, 'milk', 1),
+(8, 'pods', 1),
+(9, 'vanilla extract', 1),
+(10, 'pack no strawberries', 1),
+(11, 'unsalted butter', 1),
+(12, 'plain flour', 1),
+(13, 'icing sugar', 1),
+(14, 'ground almonds', 1),
+(15, 'whites about g', 1),
+(16, 'lemon', 1),
+(17, 'lemonleaves', 1),
+(18, 'packblueberries', 1),
+(19, 'flaked almonds', 1),
+(20, 'unsalted butter', 1),
+(21, 'waitrosebrownsugar', 1),
+(22, 'blacktailrangeeggs', 1),
+(23, 'vanilla extract', 1),
+(24, 'dark chocolate', 1),
+(25, 'buttermilk', 1),
+(26, 'selfraising flour', 1),
+(27, 'bicarbonatesoda', 1),
+(28, 'cocoa powder', 1),
+(29, 'packraspberries', 1),
+(30, 'crme frachewhipped cream', 1)
+;
+INSERT INTO recipes_products VALUES 
+(1, 1, 'g', 250),
+(1, 2, 'g', 250),
+(1, 3, 'piece', 4),
+(1, 4, 'g', 250),
+(1, 5, 'tsp', 1),
+(1, 6, 'tsp', 0.5),
+(1, 7, 'tbsp', 6),
+(1, 8, 'piece', 6),
+(1, 9, 'tsp', 0.5),
+(1, 10, 'g', 365),
+(2, 11, 'g', 200),
+(2, 12, 'g', 70),
+(2, 13, 'g', 200),
+(2, 14, 'g', 150),
+(2, 6, 'tsp', 0.5),
+(2, 15, 'piece', 5),
+(2, 16, 'piece', 1),
+(2, 17, 'tbsp', 1),
+(2, 18, 'g', 150),
+(2, 19, 'g', 10),
+(3, 20, 'g', 225),
+(3, 21, 'g', 200),
+(3, 22, 'piece', 3),
+(3, 23, 'tsp', 1),
+(3, 24, 'g', 70),
+(3, 25, 'ml', 150),
+(3, 26, 'g', 225),
+(3, 27, 'tsp', 0.5),
+(3, 28, 'g', 50),
+(3, 6, 'tsp', 0.5),
+(3, 29, 'g', 150),
+(3, 30, 'piece', 1)
+;
+INSERT INTO tags VALUES 
+(1, 'strawberries'),
+(2, 'cardamom'),
+(3, 'vegetarian'),
+(4, 'cake'),
+(5, 'blueberry'),
+(6, 'picnic'),
+(7, 'baking'),
+(8, 'chocolate')
+;
+INSERT INTO recipes_tags VALUES 
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(2, 3),
+(2, 5),
+(2, 6),
+(3, 4),
+(3, 7),
+(3, 8)
+;*/
