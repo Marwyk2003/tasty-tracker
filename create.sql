@@ -1,5 +1,5 @@
 CREATE TYPE unit_enum AS ENUM ('ml','l', 'tsp', 'tbsp', 'pinch', 'g', 'piece');
-CREATE TYPE shape_enum AS ENUM ('rectangular', 'round', 'round with chimney');
+CREATE TYPE shape_enum AS ENUM ('rectangular tin', 'round tin', 'round tin with chimney', 'ovenproof dish', 'tart tin', 'muffin tin');
 CREATE TYPE difficulty_enum AS ENUM ('very easy', 'easy', 'medium', 'hard', 'very hard');
 
 CREATE TABLE forms (
