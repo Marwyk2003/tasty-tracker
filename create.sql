@@ -186,6 +186,8 @@ END;
 $nowa_publikacja$ LANGUAGE plpgsql;
 
 INSERT INTO categories VALUES(1, 'various'), (2, 'fruit'), (3, 'nuts and dried fruits'), (4, 'olives and oils'), (5, 'sweet'), (6, 'fragrants'), (7, 'dairy and eggs'), (8, 'cereal products');
+INSERT INTO restrictions VALUES(1, 'vegan'), (2, 'nuts'), (3, 'lactose');
+
 INSERT INTO forms VALUES 
 (1, 'rectangular tin', 30, 20),
 (2, 'muffin tin', 36, 26),
@@ -1684,6 +1686,21 @@ INSERT INTO tags VALUES
 (78, 'banana'),
 (79, 'nowruz'),
 (80, 'cranberry')
+;
+
+INSERT INTO products_restrictions VALUES 
+(1, 3),
+(7, 3),
+(20, 3),
+(18, 3),
+(28, 2),
+(39, 3),
+(47, 1),
+(65, 2),
+(118, 2),
+(143, 1),
+(144, 1),
+(154, 3)
 ;
 
 INSERT INTO recipes_tags VALUES 
