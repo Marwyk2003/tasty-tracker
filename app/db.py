@@ -9,23 +9,28 @@ db_port = '5432'
 # Connect to the database
 db_string = 'postgresql://{}:{}@{}:{}/{}'.format(db_user, db_pass, db_host, db_port, db_name)
 
-if __name__ == '__main__':
-    conn = psycopg2.connect(
-        database=db_name, user=db_user,
-        password=db_pass, host=db_host, port=db_port
-    )
-    cursor = conn.cursor()
-    cursor.execute('''
-        INSERT INTO numbers VALUES (1,2);
-    ''')
-    conn.commit()
 
-    cursor.execute('''
-                SELECT * FROM numbers;
-            ''')
-    res = cursor.fetchall()
-    print(res)
+class Database:
+    def __init__(self):
+        self.connection = psycopg2.connect(
+            database=db_name, user=db_user,
+            password=db_pass, host=db_host, port=db_port
+        )
+        self.cursor = self.connection.cursor()
 
-    if (conn):
-        cursor.close()
-        conn.close()
+    def quit(self):
+        if self.connection:
+            self.cursor.close()
+            self.connection.close()
+
+    def get_recipe_body(self, id):
+        pass
+
+    def get_recipe_ingredients(self, id):
+        pass
+
+    def get_recipe_tags(self, id):
+        pass
+
+    def get_recipe_constraints(self, id):
+        pass
