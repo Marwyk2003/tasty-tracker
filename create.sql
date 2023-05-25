@@ -133,13 +133,13 @@ CREATE TABLE notes (
 
 CREATE TABLE comments (
 	id_comment 	     serial,
-	id_recipe 	     integer NOT NULL,
+	id_recipe 	     integer NOT NULL,--we need to add trigger to make sure that id_recipe=parent.id_recipe
 	id_user 	     integer NOT NULL,
 	id_parent 	     integer,
 	body 		     text NOT NULL,
 	CONSTRAINT pk_comments PRIMARY KEY(id_comment)
 );
-
+--CONSTRINTS
 ALTER TABLE recipes ADD CONSTRAINT fk_recipes_user FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE SET NULL;
 ALTER TABLE recipes ADD CONSTRAINT fk_recipes_form FOREIGN KEY (id_form) REFERENCES forms(id_form);
 
@@ -170,7 +170,7 @@ ALTER TABLE users_liked ADD CONSTRAINT fk_users_liked_recipe FOREIGN KEY (id_rec
 
 ALTER TABLE users_liked_comments ADD CONSTRAINT fk_users_liked_user_comments FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE;
 ALTER TABLE users_liked_comments ADD CONSTRAINT fk_users_liked_recipe_comments FOREIGN KEY (id_comment) REFERENCES comments(id_comment) ON DELETE CASCADE;
-
+--FUNCTIONS
 CREATE OR REPLACE FUNCTION add_ingredient(recipe integer, product_name varchar(60), id_category integer, amount numeric(4, 2), unit unit_enum)
 RETURNS void AS $nowa_publikacja$
 DECLARE
@@ -185,6 +185,56 @@ BEGIN
 END;
 $nowa_publikacja$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION tags_from_recipe(recipe integer)
+RETURNS TABLE(tags varchar(60))  AS $$
+DECLARE
+BEGIN
+  RETURN QUERY SELECT tag 
+  FROM recipes_tags NATURAL JOIN tags
+  WHERE id_recipe=recipe;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION restrictions_from_recipe(recipe integer)
+RETURNS TABLE(restriction varchar(60))  AS $$
+DECLARE
+BEGIN
+  RETURN QUERY SELECT DISTINCT restrictions.restriction 
+  FROM restrictions JOIN products_restrictions ON restrictions.id_restriction=products_restrictions.id_restriction
+    JOIN products ON products_restrictions.id_product=products.id_product 
+    JOIN recipes_products ON products.id_product=recipes_products.id_product
+    JOIN recipes ON recipes.id_recipe=recipes_products.id_recipe
+  WHERE recipes.id_recipe=recipe;
+END;
+$$ LANGUAGE plpgsql;
+CREATE OR REPLACE VIEW recipe_info AS 
+SELECT recipes.name,username,shape,added_at,body,id_recipe --we can add sth here
+FROM recipes NATURAL JOIN users NATURAL JOIN forms; 
+
+CREATE OR REPLACE FUNCTION basic_from_recipe(recipe integer)
+RETURNS TABLE(name varchar(100),author varchar(40),shape shape_enum,added_at timestamp,body text[])  AS $$
+DECLARE
+BEGIN
+  RETURN QUERY SELECT recipe_info.name,username,recipe_info.shape,recipe_info.added_at,recipe_info.body FROM recipe_info WHERE id_recipe=recipe;
+END;
+$$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION comments_from_comment(comment integer)
+RETURNS TABLE(username varchar(40),body text,id_comment integer)  AS $$
+DECLARE
+BEGIN
+  RETURN QUERY SELECT users.username,comments.body,comments.id_comment FROM comments JOIN users USING(id_user)
+  WHERE id_parent=comment;
+END;
+$$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION comments_from_recipe(recipe integer) --returns only parent comments!
+RETURNS TABLE(username varchar(40),body text,id_comment integer)  AS $$
+DECLARE
+BEGIN
+  RETURN QUERY SELECT users.username,comments.body,comments.id_comment FROM comments JOIN users USING(id_user)
+  WHERE id_recipe=recipe AND id_parent IS NULL;
+END;
+$$ LANGUAGE plpgsql;
+--INSERTS
 INSERT INTO categories VALUES(1, 'various'), (2, 'fruit'), (3, 'nuts and dried fruits'), (4, 'olives and oils'), (5, 'sweet'), (6, 'fragrants'), (7, 'dairy and eggs'), (8, 'cereal products');
 INSERT INTO restrictions VALUES(1, 'vegan'), (2, 'nuts'), (3, 'lactose');
 
