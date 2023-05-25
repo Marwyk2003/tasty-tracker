@@ -23,14 +23,10 @@ class Database:
             self.cursor.close()
             self.connection.close()
 
-    def get_recipe_body(self, id):
-        pass
-
-    def get_recipe_ingredients(self, id):
-        pass
-
-    def get_recipe_tags(self, id):
-        pass
-
-    def get_recipe_constraints(self, id):
-        pass
+    def exec(self, query):
+        try:
+            self.cursor.execute(query)
+            self.cursor.commit()
+        except:
+            # TODO
+            pass

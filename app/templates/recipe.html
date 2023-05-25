@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Hello Bulma!</title>
+    <title>{{ vm.name }}</title>
     <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
@@ -29,68 +29,44 @@
         <div class="column">
             <div class="box">
                 <section class="section">
-                    <h1 class="title is-1">Wegańskie pancakes doskonałe</h1>
+                    <h1 class="title is-1">{{ vm.name }}</h1>
                     <p class="subtitle pl-5">
-                        <a href="url">@Marwyk2003</a>
+                        <a href="{{ vm.author_url }}"> @{{ vm.author_name }} </a>
+                    </p>
+                </section>
+                <section>
+                    <p class="has-icons-left subtitle pl-5">
+                        <span class="icon is-left">
+                          <i class="fa fa-solid fa-thumbs-up"></i>
+                        </span>
+                        {{ vm.likes }}
                     </p>
                     <p class="has-icons-left subtitle pl-5">
-                <span class="icon is-left">
-                  <i class="fa fa-solid fa-thumbs-up"></i>
-                </span>
-                        1,283
+                        <span class="icon is-left">
+                          <i class="fa fa-solid fa-star"></i>
+                        </span>
+                        {{ vm.difficulty }}
                     </p>
-                    <p class="has-icons-left subtitle pl-5">
-                <span class="icon is-left">
-                    <i class="fa fa-solid fa-signal-bars"></i>
-                </span>
-                        {{ difficulty }}
-                    </p>
+                </section>
+                <section>
+
+                    {% for t in vm.tags %}
+                    <span class="tag is-info is-light is-rounded is-large">{{ t }}</span>
+                    {% endfor %}
                 </section>
             </div>
             <div class="box">
                 <section class="section">
                     <h2 class="subtitle">
-                        Pancakes, czyli klasyczne amerykańskie naleśniki, wydawały mi
-                        się przereklamowane - małe, blade, gołe placki z importu. Ale
-                        kilka dni temu na Wasze życzenie zaczęłam pracować nad przepisem
-                        na pancakes z aquafabą. I kiedy w końcu spróbowałam pierwszego
-                        udanego placuszka zrozumiałam dwie rzeczy. Że nie wiedziałam nic
-                        o pancakesach i że mam nowy ulubiony deser.
-                    </h2>
-                    <h2 class="subtitle">
-                        Pancakes są inne niż wszystkie tradycyjne polskie naleśniczki
-                        oraz placuszki. Mniejsze i grubsze niż naleśniki, delikatniejsze
-                        niż placki, podobne zupełnie do niczego. Skórka chociaż
-                        przyjemna jest niepozorna, lekko złota, przypieczona, ale nie
-                        chrupiąca. To ich wnętrze jest zupełnie wyjątkowe. W środku są
-                        puszyste, sprężyste, rozciągliwe, jednocześnie jędrne i
-                        delikatne. Elastyczne jak naleśnik, ale gąbczaste jak kawałek
-                        biszkoptu do tortu, który tylko czeka, żeby nasączyć go ponczem.
-                        Ta druga właściwość pancakesów jest widoczna kiedy zgodnie z
-                        amerykańskimi filmami polejemy je syropem klonowym. Szybko i
-                        niewidocznie wchłoną syrop, nie rozpadając się z zewnątrz, ale
-                        wypełniając się od środka słodkim, lepkim syropem.
-                    </h2>
-                    <h2 class="subtitle">
-                        Jak osiągnąć taki wyjątkowy efekt? Należy sięgnąć po magiczną
-                        aquafabę, czyli wodę z ciecierzycy o której tak dużo pisałam
-                        tutaj, porządnie ubić ją mikserem i wymieszać z zupełnie
-                        zwyczajnymi składnikami, takimi jak mąka i mleko roślinne.
+                        {{ vm.intro }}
                     </h2>
                 </section>
                 <section class="section">
-                    <h1 class="title">Przygotowanie</h1>
-                    <p1 class="subtitle">
-                        <ol class="pl-5">
-                            <li>
-                                {{ body }}
-                            </li>
-                        </ol>
-                    </p1>
-                </section>
-                <section class="section">
-                    <h1 class="title">Uwagi</h1>
-                    <h2 class="subtitle">Chyba nie da się zepsuć babeczek.</h2>
+                    {% for p in vm.body %}
+                    <p class="subtitle pl-5">
+                        {{ p }}
+                    </p>
+                    {% endfor %}
                 </section>
             </div>
         </div>
@@ -101,7 +77,7 @@
                         <h1 class="title">Składniki</h1>
                         <table>
                             <tbody>
-                            {% for ing in ingredients %}
+                            {% for ing in vm.ingredients %}
                             <tr>
                                 <td>{{ing[0]}}</td>
                                 <td>{{ing[1]}} {{ing[2]}}</td>
@@ -113,18 +89,9 @@
                 </div>
             </div>
             <div class="box">
-            <span class="tag is-success is-light is-rounded is-large"
-            >vegan</span
-            >
-                <span class="tag is-success is-light is-rounded is-large"
-                >low suggar</span
-                >
-                <span class="tag is-success is-light is-rounded is-large"
-                >lactose-free</span
-                >
-                <span class="tag is-success is-light is-rounded is-large"
-                >nut-free</span
-                >
+                {% for c in vm.constraints %}
+                <span class="tag is-success is-light is-rounded is-large">{{ c }}</span>
+                {% endfor %}
             </div>
         </div>
     </div>
