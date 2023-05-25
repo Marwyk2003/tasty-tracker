@@ -61,122 +61,28 @@
 </section>
 <section class="section">
     <div class="container">
+        {% for row in vm.recipes %}
         <div class="tile is-ancestor">
             <div class="tile is-horizontal">
                 <div class="tile is-vertical is-12">
                     <div class="tile">
+                        {% for col in row %}
                         <div class="tile is-parent">
                             <article class="tile is-child notification is-info">
-                                <p class="title">Middle tile</p>
-                                <figure class="image is-4by3">
-                                    <img src="https://bulma.io/images/placeholders/640x480.png">
-                                </figure>
+                                <a href="{{ col.url }}">
+                                    <p class="title">{{ col.name }}</p>
+                                    <figure class="image is-4by3">
+                                        <img src="https://bulma.io/images/placeholders/640x480.png">
+                                    </figure>
+                                </a>
                             </article>
                         </div>
-                        <div class="tile is-parent">
-                            <article class="tile is-child notification is-info">
-                                <p class="title">Middle tile</p>
-                                <figure class="image is-4by3">
-                                    <img src="https://bulma.io/images/placeholders/640x480.png">
-                                </figure>
-                            </article>
-                        </div>
-                        <div class="tile is-parent">
-                            <article class="tile is-child notification is-info">
-                                <p class="title">Middle tile</p>
-                                <figure class="image is-4by3">
-                                    <img src="https://bulma.io/images/placeholders/640x480.png">
-                                </figure>
-                            </article>
-                        </div>
-                        <div class="tile is-parent">
-                            <article class="tile is-child notification is-info">
-                                <p class="title">Middle tile</p>
-                                <figure class="image is-4by3">
-                                    <img src="https://bulma.io/images/placeholders/640x480.png">
-                                </figure>
-                            </article>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
-        <div class="tile is-horizontal">
-            <div class="tile is-vertical is-12">
-                <div class="tile">
-                    <div class="tile is-parent">
-                        <article class="tile is-child notification is-info">
-                            <p class="title">Middle tile</p>
-                            <figure class="image is-4by3">
-                                <img src="https://bulma.io/images/placeholders/640x480.png">
-                            </figure>
-                        </article>
-                    </div>
-                    <div class="tile is-parent">
-                        <article class="tile is-child notification is-info">
-                            <p class="title">Middle tile</p>
-                            <figure class="image is-4by3">
-                                <img src="https://bulma.io/images/placeholders/640x480.png">
-                            </figure>
-                        </article>
-                    </div>
-                    <div class="tile is-parent">
-                        <article class="tile is-child notification is-info">
-                            <p class="title">Middle tile</p>
-                            <figure class="image is-4by3">
-                                <img src="https://bulma.io/images/placeholders/640x480.png">
-                            </figure>
-                        </article>
-                    </div>
-                    <div class="tile is-parent">
-                        <article class="tile is-child notification is-info">
-                            <p class="title">Middle tile</p>
-                            <figure class="image is-4by3">
-                                <img src="https://bulma.io/images/placeholders/640x480.png">
-                            </figure>
-                        </article>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="tile is-horizontal">
-            <div class="tile is-vertical is-12">
-                <div class="tile">
-                    <div class="tile is-parent">
-                        <article class="tile is-child notification is-info">
-                            <p class="title">Middle tile</p>
-                            <figure class="image is-4by3">
-                                <img src="https://bulma.io/images/placeholders/640x480.png">
-                            </figure>
-                        </article>
-                    </div>
-                    <div class="tile is-parent">
-                        <article class="tile is-child notification is-info">
-                            <p class="title">Middle tile</p>
-                            <figure class="image is-4by3">
-                                <img src="https://bulma.io/images/placeholders/640x480.png">
-                            </figure>
-                        </article>
-                    </div>
-                    <div class="tile is-parent">
-                        <article class="tile is-child notification is-info">
-                            <p class="title">Middle tile</p>
-                            <figure class="image is-4by3">
-                                <img src="https://bulma.io/images/placeholders/640x480.png">
-                            </figure>
-                        </article>
-                    </div>
-                    <div class="tile is-parent">
-                        <article class="tile is-child notification is-info">
-                            <p class="title">Middle tile</p>
-                            <figure class="image is-4by3">
-                                <img src="https://bulma.io/images/placeholders/640x480.png">
-                            </figure>
-                        </article>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </section>
 </body>

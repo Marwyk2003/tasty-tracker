@@ -11,7 +11,8 @@ db = Database()
 
 @app.route('/')
 def home():
-    vm = RecipeList()
+    vm = RecipeList(db)
+    vm.load()
     return render_template('index.html', vm=vm)
 
 

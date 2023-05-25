@@ -22,7 +22,6 @@ class Recipe:
         self.ingredients = self.get_ingredients(id)
         self.tags = self.get_tags(id)
         self.constraints = self.get_constraints(id)
-        print(self.body)
 
     def get_body(self, id):
         # (name, author, likes, img, body)
