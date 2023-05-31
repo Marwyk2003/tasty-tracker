@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 
 from templates.viewmodels.RecipeList import RecipeList
 from templates.viewmodels.RecipeForm import RecipeForm
@@ -23,11 +23,23 @@ def recipe(rid):
     return render_template('recipe.html', vm=vm)
 
 
-@app.route('/edit/<rid>')
+@app.route('/edit/<rid>', methods=['GET', 'POST'])
 def edit(rid):
-    vm = RecipeForm(db)
-    vm.load(rid)
-    return render_template('recipe_form.html', vm=vm)
+    if request.method == 'GET':
+        vm = Recipe(db)
+        vm.load(rid)
+        return render_template('recipe_form.html', vm=vm)
+
+    if request.method == 'POST':
+        vm = RecipeForm(db)
+        vm.name = request.form.get('vm_name')
+        vm.difficulty = request.form.get('vm_difficulty')
+        vm.img = request.form.get('vm_img')
+        vm.body = request.form.get('vm_body')
+        vm.tags = request.form.getlist('vm_tags')
+        vm.constraints = request.form.getlist('vm_constraints')
+        vm.save()
+        return redirect(url_for('recipe', rid=rid))
 
 
 if __name__ == '__main__':
