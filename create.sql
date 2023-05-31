@@ -172,7 +172,7 @@ ALTER TABLE users_liked_comments ADD CONSTRAINT fk_users_liked_user_comments FOR
 ALTER TABLE users_liked_comments ADD CONSTRAINT fk_users_liked_recipe_comments FOREIGN KEY (id_comment) REFERENCES comments(id_comment) ON DELETE CASCADE;
 --FUNCTIONS
 CREATE OR REPLACE FUNCTION add_ingredient(recipe integer, product_name varchar(60), id_category integer, amount numeric(4, 2), unit unit_enum)
-RETURNS void AS $nowa_publikacja$
+RETURNS void AS $$
 DECLARE
   id integer;
 BEGIN
@@ -183,7 +183,7 @@ BEGIN
   END IF;
   INSERT INTO recipes_products VALUES (recipe, id, unit, amount);
 END;
-$nowa_publikacja$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION tags_from_recipe(recipe integer)
 RETURNS TABLE(tags varchar(60))  AS $$
@@ -194,6 +194,14 @@ BEGIN
   WHERE id_recipe=recipe;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION products_from_recpie(recipe integer)
+RETURNS TABLE(products varchar(60),amount integer, unit unit_enum) AS $$
+BEGIN
+	RETURN QUERY SELECT products.name, recipes_products.amount,recipes_products.unit FROM recipes JOIN recipes_products USING(id_recipe)
+	JOIN products USING(id_product) WHERE recipe=id_recipe;
+END;
+$$LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION restrictions_from_recipe(recipe integer)
 RETURNS TABLE(restriction varchar(60))  AS $$
@@ -234,6 +242,50 @@ BEGIN
   WHERE id_recipe=recipe AND id_parent IS NULL;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION recipe_list()
+RETURNS TABLE(name varchar(100))  AS $$
+DECLARE
+BEGIN
+  RETURN QUERY SELECT recipes.name FROM recipes;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION recipes_with_products(list varchar(60)[])
+RETURNS TABLE(id_recipe int,name varchar(100))  AS $$
+DECLARE
+BEGIN
+  RETURN QUERY 
+  SELECT recipes.id_recipe, recipes.name 
+  FROM recipes
+  JOIN recipes_products USING(id_recipe)
+  JOIN products USING(id_product)
+  WHERE products.name IN (SELECT unnest(list))
+  GROUP BY recipes.id_recipe
+  HAVING COUNT(DISTINCT products.name)=array_length(list,1);
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION add_like(recipe int,userid int)
+RETURNS void AS $$
+DECLARE
+BEGIN
+  INSERT INTO users_liked VALUES(recipe,userid);
+END;
+$$ LANGUAGE plpgsql;
+
+--VIEWS
+CREATE OR REPLACE VIEW top_recipes AS
+SELECT recipes.name,COUNT(*) 
+FROM recipes 
+JOIN users_liked USING(id_recipe)
+GROUP BY id_recipe
+ORDER BY 2 DESC;
+
+CREATE OR REPLACE VIEW recent_recipes AS
+SELECT recipes.name,recipes.added_at 
+FROM recipes 
+ORDER BY 2 DESC;
 --INSERTS
 INSERT INTO categories VALUES(1, 'various'), (2, 'fruit'), (3, 'nuts and dried fruits'), (4, 'olives and oils'), (5, 'sweet'), (6, 'fragrants'), (7, 'dairy and eggs'), (8, 'cereal products');
 INSERT INTO restrictions VALUES(1, 'vegan'), (2, 'nuts'), (3, 'lactose');
