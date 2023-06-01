@@ -17,13 +17,19 @@ drop table if exists comments cascade;
 drop table if exists users_liked_comments cascade;
 drop table if exists source_types cascade;
 drop table if exists sources cascade;
+
 drop view if exists recipe_info;
+drop view if exists top_recipes;
+drop view if exists recent_recipes;
 
 drop function if exists add_ingredient;
 drop function if exists tags_from_recipe;
 drop function if exists basic_from_recipe;
 drop function if exists comments_from_recipe;
 drop function if exists comments_from_comment;
+drop function if exists recipe_list;
+drop function if exists recipes_with_products;
+drop function if exists products_from_recpie;
 
 
 drop type if exists difficulty_enum;
