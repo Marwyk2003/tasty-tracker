@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 
-from templates.viewmodels.RecipeList import RecipeList
-from templates.viewmodels.RecipeForm import RecipeForm
-from templates.viewmodels.Recipe import Recipe
+from viewmodels.RecipeList import RecipeList
+from viewmodels.RecipeForm import RecipeForm
+from viewmodels.Recipe import Recipe
 from db import Database
 
 app = Flask(__name__)

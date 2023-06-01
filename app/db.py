@@ -26,7 +26,7 @@ class Database:
     def exec(self, query):
         try:
             self.cursor.execute(query)
-            self.cursor.commit()
+            return self.cursor.fetchall()
         except:
             # TODO
             pass

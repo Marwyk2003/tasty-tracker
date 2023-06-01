@@ -1,6 +1,7 @@
 class RecipeList:
     def __init__(self, db):
         self.recipes = []
+        self.db = db
 
     def load(self):
         self.recipes = self.get_recipes()

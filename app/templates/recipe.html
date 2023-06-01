@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>{{ vm.name }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
-    />
-    <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
 </head>
 
@@ -32,18 +30,20 @@
                     <h1 class="title is-1">{{ vm.name }}</h1>
                     <p class="subtitle pl-5">
                         <a href="{{ vm.author_url }}"> @{{ vm.author_name }} </a>
+                        </br>
+                        created at: <small>{{ vm.timestamp }}</small>
                     </p>
                 </section>
                 <section>
                     <p class="has-icons-left subtitle pl-5">
                         <span class="icon is-left">
-                          <i class="fa fa-solid fa-thumbs-up"></i>
+                          <i class="fa fa-birthday-cake"></i>
                         </span>
-                        {{ vm.likes }}
+                        {{ vm.utensil }}
                     </p>
                     <p class="has-icons-left subtitle pl-5">
                         <span class="icon is-left">
-                          <i class="fa fa-solid fa-star"></i>
+                          <i class="fa fa-thermometer-half"></i>
                         </span>
                         {{ vm.difficulty }}
                     </p>
@@ -57,9 +57,9 @@
             </div>
             <div class="box">
                 <section class="section">
-                    {% for p in <vm class="bod"></vm>y.split('\n') %}
+                    {% for p in vm.body %}
                     <p class="subtitle pl-5">
-                        {{ vm.body }}
+                        {{ p }}
                     </p>
                     {% endfor %}
                 </section>
@@ -89,6 +89,12 @@
                 {% endfor %}
             </div>
         </div>
+    </div>
+    <div class="box">
+        {% from "comment.html" import comment with context %}
+        {% for c in vm.comments %}
+        {{ comment(*c) }}
+        {% endfor %}
     </div>
 </div>
 </body>
