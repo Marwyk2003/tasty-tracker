@@ -184,6 +184,22 @@ BEGIN
   INSERT INTO recipes_products VALUES (recipe, id, unit, amount);
 END;
 $$ LANGUAGE plpgsql;
+ 
+CREATE OR REPLACE FUNCTION add_all_ingredients(recipe integer, product_name varchar(60)[], id_category integer[], amount numeric(4, 2)[], unit unit_enum[])
+-- YOU NEED TO CAST ARRAYS!!! like that
+-- add_all_ingredients(1, ARRAY['unsalted butter','lol']::varchar(60)[], ARRAY[7,3], ARRAY[250,100], ARRAY['g','l']::unit_enum[]);
+RETURNS void AS $$
+DECLARE
+  id integer;
+  i integer;
+BEGIN
+DELETE FROM recipes_products WHERE id_recipe=recipe;
+FOR i IN 1..array_length(product_name,1)
+LOOP 
+  PERFORM add_ingredient(recipe,product_name[i],id_category[i],amount[i],unit[i]);
+END LOOP;
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION tags_from_recipe(recipe integer)
 RETURNS TABLE(tags varchar(60))  AS $$
