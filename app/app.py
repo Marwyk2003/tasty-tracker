@@ -8,6 +8,8 @@ from db import Database
 app = Flask(__name__)
 db = Database()
 
+USER_ID = None
+
 
 @app.route('/')
 def home():
@@ -43,6 +45,18 @@ def edit(rid):
                                 request.form.get(f'vm_ingredient_unit_{x}')]]
         vm.save()
         return redirect(url_for('recipe', rid=rid))
+
+
+@app.route('/login/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        print(username, password, flush=True)
+        return redirect('/')
 
 
 if __name__ == '__main__':
