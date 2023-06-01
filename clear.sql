@@ -31,6 +31,7 @@ drop function if exists recipe_list;
 drop function if exists recipes_with_products;
 drop function if exists products_from_recpie;
 drop function if exists add_all_ingredients;
+drop function if exists login;
 
 
 drop type if exists difficulty_enum;
