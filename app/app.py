@@ -34,10 +34,13 @@ def edit(rid):
         vm = RecipeForm(db)
         vm.name = request.form.get('vm_name')
         vm.difficulty = request.form.get('vm_difficulty')
-        vm.img = request.form.get('vm_img')
+        vm.utensil = request.form.get('vm_utensil')
         vm.body = request.form.get('vm_body')
-        vm.tags = request.form.getlist('vm_tags')
-        vm.constraints = request.form.getlist('vm_constraints')
+        vm.recipes = []
+        for x in range(15):
+            vm.ingredients += [[request.form.get(f'vm_ingredient_name_{x}'),
+                                request.form.get(f'vm_ingredient_amount_{x}'),
+                                request.form.get(f'vm_ingredient_unit_{x}')]]
         vm.save()
         return redirect(url_for('recipe', rid=rid))
 

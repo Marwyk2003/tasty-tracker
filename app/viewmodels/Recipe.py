@@ -7,11 +7,12 @@ class Recipe:
         self.utensil = ''
         self.timestamp = ''
         self.difficulty = ''
+        self.prep_time = ''
         self.likes = 0
         self.img = ''
         self.body = ''
         self.author_url = ''
-        self.ingredients = ()
+        self.ingredients = [('', '', '') for x in range(15)]
         self.tags = ()
         self.constraints = ()
         self.comments = ()
@@ -20,7 +21,9 @@ class Recipe:
 
     def load(self, id):
         self.id = id
-        self.name, self.author_name, self.utensil, self.timestamp, self.body = self.get_body(id)
+        self.name, self.author_name, self.utensil, self.timestamp, \
+            self.body, self.difficulty, self.prep_time, self.likes = \
+            self.get_body(id)
         self.author_url = f'/user/{self.author_id}'
         self.ingredients = self.get_ingredients(id)
         self.tags = self.get_tags(id)
@@ -38,12 +41,20 @@ class Recipe:
         return body
 
     def get_ingredients(self, id):
+        query = self.db.exec(
+            f'''
+                        SELECT * from products_from_recpie({id});
+                    '''
+        )
+
         # ((name, amount, unit), ...)
-        res = (('ingredient_1', 200, 'ml'),
-               ('ingredient_2', 150, 'g'),
-               ('ingredient_3', 2, 'tsp'),
-               ('ingredient_4', 1, 'piece'),
-               ('ingredient_5', 1000, 'g'))
+        # res = (('ingredient_1', 200, 'ml'),
+        #        ('ingredient_2', 150, 'g'),
+        #        ('ingredient_3', 2, 'tsp'),
+        #        ('ingredient_4', 1, 'piece'),
+        #        ('ingredient_5', 1000, 'g'))
+        res = [list(x) for x in query]
+        res += [['', '', '']] * (15 - len(res))
         return res
 
     def get_tags(self, id):

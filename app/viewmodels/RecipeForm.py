@@ -2,18 +2,15 @@ class RecipeForm:
     def __init__(self, db):
         self.id = None
         self.name = ''
-        self.author_id = None
-        self.author_name = ''
+        self.author = ''
         self.difficulty = ''
-        self.likes = 0
-        self.img = ''
+        self.utensil = ''
         self.body = ''
-        self.author_url = ''
-        self.ingredients = ()
+        self.ingredients = []
         self.tags = ()
-        self.constraints = ()
 
         self.db = db
 
     def save(self):
-        pass
+        print(self.name, self.difficulty, self.utensil, self.body, self.ingredients, flush=True, sep="\n\n\ns")
+

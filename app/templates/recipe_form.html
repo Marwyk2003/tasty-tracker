@@ -31,44 +31,52 @@
                 <div class="box">
                     <section class="section">
                         <input name="vm_name" class="input is-large" type="text" placeholder="Name of the recipe">
-                        <div class="file has-name is-fullwidth">
-                            <label class="file-label">
-                                <input class="file-input" type="file" name="resume">
-                                <span class="file-cta">
-                          <span class="file-icon">
-                            <i class="fa fa-image"></i>
-                          </span>
-                          <span class="file-label">
-                            Choose a thumbnail…
-                          </span>
-                        </span>
-                                <span class="file-name">
-                          Screen Shot 2017-07-29 at 15.54.25.png
-                        </span>
-                            </label>
-                        </div>
+
                         <div class="control has-icons-left">
                             <div class="select">
                                 <select name="vm_difficulty">
-                                    <option selected></option>
-                                    <option>Very Easy</option>
-                                    <option>Easy</option>
-                                    <option>Medium</option>
-                                    <option>Hard</option>
-                                    <option>Very Hard</option>
+                                    <option selected>very easy</option>
+                                    <option>easy</option>
+                                    <option>medium</option>
+                                    <option>hard</option>
+                                    <option>very Hard</option>
                                 </select>
                             </div>
-                            <p class="icon is-small is-left">
-                                <i class="fa fa-star" style="color: #ffdb0f;"></i>
+                            <p class="icon is-left">
+                                <i class="fa fa-thermometer-half"></i>
                             </p>
                         </div>
-                    </section>
 
+                        <div class="control has-icons-left">
+                            <div class="select">
+                                <select name="vm_utensil">
+                                    <option selected>rectangular tin</option>
+                                    <option>round tin</option>
+                                    <option>round tin with chimney</option>
+                                    <option>ovenproof dish</option>
+                                    <option>tart tin</option>
+                                    <option>muffin tin</option>
+                                    <option>loaf tin</option>
+                                </select>
+                            </div>
+                            <p class="icon is-left">
+                                <i class="fa fa-birthday-cake"></i>
+                            </p>
+                        </div>
+
+                        <div class="control has-icons-left">
+                            <input class="input" type="text" required pattern="[0-9]{2}:[0-9]{2}"
+                                   placeholder="Estimated time (hh:mm)">
+                            <span class="icon is-left">
+                                <i class="fa fa-clock-o"></i>
+                            </span>
+                        </div>
+                    </section>
                 </div>
                 <div class="box">
                     <section class="section">
                         <p class="subtitle pl-5">
-                            <textarea name="vm_body" class="textarea">{{ vm.body }}</textarea>
+                            <textarea name="vm_body" class="textarea" style="min-height: 500px;">{{ '\n\n'.join(vm.body) }}</textarea>
                         </p>
                     </section>
                 </div>
@@ -76,66 +84,22 @@
             <div class="column is-one-third">
                 <div class="box">
                     <div class="content">
-                        <section class="section">
-                            <h1 class="title">Składniki</h1>
-                            <table>
-                                <tbody>
-                                {% for ing in ingredients %}
-                                <tr>
-                                    <td>{{ing[0]}}</td>
-                                    <td>{{ing[1]}} {{ing[2]}}</td>
-                                </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>w
-                        </section>
+                        {% for x in range(15) %}
                         <div class="control">
-                            <input name="vm_ingredient_name" class="input is-expanded" type="text" placeholder="name">
+                            <input name="vm_ingredient_name_{{ x }}" class="input is-expanded is-small" type="text"
+                                   placeholder="name" value="{{ vm.ingredients[x][0] }}">
                         </div>
                         <div class="field has-addons">
                             <div class="control">
-                                <input name="vm_ingredient_amount" class="input" type="text" placeholder="amount">
+                                <input name="vm_ingredient_amount_{{ x }}" class="input is-small" type="text"
+                                       placeholder="amount" value="{{ vm.ingredients[x][1] }}">
                             </div>
                             <div class="control">
-                                <input name="vm_ingredient_unit" class="input" type="text" placeholder="unit">
-                            </div>
-                            <div class="control">
-                                <a class="button is-info">
-                                    Add
-                                </a>
+                                <input name="vm_ingredient_unit_{{ x }}" class="input is-small" type="text"
+                                       placeholder="unit" value="{{ vm.ingredients[x][2] }}">
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="box">
-                    <div class="content"
-                    >            <span class="tag is-success is-light is-rounded is-large"
-                    >vegan</span
-                    >
-                        <span class="tag is-success is-light is-rounded is-large"
-                        >low suggar</span
-                        >
-                        <span class="tag is-success is-light is-rounded is-large"
-                        >lactose-free</span
-                        >
-                        <span class="tag is-success is-light is-rounded is-large"
-                        >nut-free</span
-                        >
-                    </div>
-                    <div class="field has-addons">
-                        <div class="control is-expanded">
-                            <div class="select is-fullwidth">
-                                <select>
-                                    <option>vegan</option>
-                                    <option>low suggar</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="control">
-                            <a class="button is-info">
-                                Add
-                            </a>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="box">

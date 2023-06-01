@@ -37,22 +37,34 @@
                 <section>
                     <p class="has-icons-left subtitle pl-5">
                         <span class="icon is-left">
-                          <i class="fa fa-birthday-cake"></i>
+                          <i class="fa fa-thumbs-up"></i>
                         </span>
-                        {{ vm.utensil }}
+                        <strong>{{ vm.likes }}</strong> people liked this recipe
                     </p>
                     <p class="has-icons-left subtitle pl-5">
                         <span class="icon is-left">
                           <i class="fa fa-thermometer-half"></i>
                         </span>
-                        {{ vm.difficulty }}
+                        difficulty: <strong>{{ vm.difficulty }}</strong>
+                    </p>
+                    <p class="has-icons-left subtitle pl-5">
+                        <span class="icon is-left">
+                          <i class="fa fa-clock-o"></i>
+                        </span>
+                        estimated time: <strong>{{ vm.prep_time }}</strong>
+                    </p>
+                    <p class="has-icons-left subtitle pl-5">
+                        <span class="icon is-left">
+                          <i class="fa fa-birthday-cake"></i>
+                        </span>
+                        utensil: <strong>{{ vm.utensil }}</strong>
                     </p>
                 </section>
+                </br>
                 <section>
-
-                    {% for t in vm.tags %}
-                    <span class="tag is-info is-light is-rounded is-large">{{ t }}</span>
-                    {% endfor %}
+                        {% for t in vm.tags %}
+                        <span class="tag is-info is-light is-rounded is-large">{{ t }}</span>
+                        {% endfor %}
                 </section>
             </div>
             <div class="box">
