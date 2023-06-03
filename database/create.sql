@@ -280,7 +280,7 @@ SELECT recipes.name,username,shape,added_at,body,id_recipe,difficulty,preparatio
 FROM recipes NATURAL JOIN users NATURAL JOIN forms; 
 
 CREATE OR REPLACE FUNCTION basic_from_recipe(recipe integer)
-RETURNS TABLE(name varchar(100),author varchar(40),difficulty difficulty_enum,preparation_time interval,likes bigint)  AS $$
+RETURNS TABLE(name varchar(100),author varchar(40),shape shape_enum,added_at timestamp,body text[],difficulty difficulty_enum,preparation_time interval,likes bigint)  AS $$
 DECLARE
 BEGIN
   RETURN QUERY SELECT recipe_info.name,username,recipe_info.shape,recipe_info.added_at,recipe_info.body,recipe_info.difficulty,recipe_info.preparation_time, COUNT(*) FROM recipe_info 
@@ -345,7 +345,7 @@ BEGIN
 	END IF;
 END;
 $$ LANGUAGE plpgsql;
-CREATE OR REPLACE FUNCTION login(fusername varchar(40),fhash_password char(60))
+CREATE OR REPLACE FUNCTION login(fusername varchar(40),fhash_password char(64))
 RETURNS integer AS
 $$
   declare 
