@@ -276,17 +276,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 CREATE OR REPLACE VIEW recipe_info AS 
-SELECT recipes.name,username,shape,added_at,body,id_recipe,difficulty,preparation_time --we can add sth here
+SELECT recipes.name,id_user,username,shape,added_at,body,id_recipe,difficulty,preparation_time --we can add sth here
 FROM recipes NATURAL JOIN users NATURAL JOIN forms; 
 
 CREATE OR REPLACE FUNCTION basic_from_recipe(recipe integer)
-RETURNS TABLE(name varchar(100),author varchar(40),shape shape_enum,added_at timestamp,body text[],difficulty difficulty_enum,preparation_time interval,likes bigint)  AS $$
+RETURNS TABLE(name varchar(100),author varchar(40),author_id integer,shape shape_enum,added_at timestamp,body text[],difficulty difficulty_enum,preparation_time interval,likes bigint)  AS $$
 DECLARE
 BEGIN
-  RETURN QUERY SELECT recipe_info.name,username,recipe_info.shape,recipe_info.added_at,recipe_info.body,recipe_info.difficulty,recipe_info.preparation_time, COUNT(*) FROM recipe_info 
+  RETURN QUERY SELECT recipe_info.name,username,recipe_info.id_user,recipe_info.shape,recipe_info.added_at,recipe_info.body,recipe_info.difficulty,recipe_info.preparation_time, COUNT(*) FROM recipe_info 
   LEFT JOIN users_liked USING(id_recipe)
   WHERE id_recipe=recipe
-  GROUP BY recipe_info.name,username,recipe_info.shape,recipe_info.added_at,recipe_info.body,recipe_info.difficulty,recipe_info.preparation_time;
+  GROUP BY recipe_info.name,username,recipe_info.shape,recipe_info.added_at,recipe_info.body,recipe_info.difficulty,recipe_info.preparation_time,recipe_info.id_user;
 END;
 $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION comments_from_comment(comment integer)
