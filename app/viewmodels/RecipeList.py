@@ -1,16 +1,18 @@
 class RecipeList:
     def __init__(self, db):
         self.recipes = []
+
         self.db = db
 
     def load(self):
-        self.recipes = self.get_recipes()
-
-    def get_recipes(self):
-        names = self.db.exec(
+        query = self.db.exec(
             '''
                 SELECT * FROM recipe_list;
             '''
         )
-        print(names, flush=True)
-        return names
+        for x in query:
+            [rid, name, difficulty, prep_time, _, likes] = x
+            url = f'/recipe/{rid}'
+            self.recipes += [[name, difficulty, prep_time, likes, url]]
+        print(self.recipes, flush=True, sep=', ')
+        return query

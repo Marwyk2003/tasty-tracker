@@ -25,7 +25,7 @@ class Recipe:
         self.user_id = user_id
 
     def load(self):
-        self.name, self.author_name, self.utensil, self.timestamp, \
+        self.name, self.author_name, self.author_id, self.utensil, self.timestamp, \
             self.body, self.difficulty, prep_time, self.likes = \
             self.get_body()
         self.prep_time = f'{prep_time.seconds // 3600:02d}:{prep_time.seconds % 3600 // 60:02d}'
@@ -108,3 +108,8 @@ class Recipe:
                 SELECT * from is_liked({self.id}, {self.user_id})
             '''
         )[0][0]
+
+    def is_author(self):
+        if self.user_id is None:
+            return False
+        return self.author_id == self.user_id

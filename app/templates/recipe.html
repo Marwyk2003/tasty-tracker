@@ -57,7 +57,7 @@
                 <br/>
                 <section>
                     <form method="post">
-                        <button class="button {{ 'is-info' if vm.liked else ''}}">
+                        <button name="btn_like" class="button {{ 'is-info' if vm.liked else ''}}">
                         <span class="icon">
                           <i class="fa fa-thumbs-up"></i>
                         </span>
@@ -66,6 +66,19 @@
                     </form>
                 </section>
                 <br/>
+                {% if vm.is_author() %}
+                <section>
+                    <form method="post">
+                        <button name="btn_edit" type="submit" class="button is-large is-fullwidth is-info">
+                            <span class="icon is-medium">
+                              <i class="fa fa-pencil-square-o"></i>
+                            </span>
+                            <span>Edit</span>
+                        </button>
+                    </form>
+                </section>
+                <br/>
+                {% endif %}
                 <section>
                     {% for t in vm.tags %}
                     <span class="tag is-info is-light is-rounded is-large">{{ t }}</span>

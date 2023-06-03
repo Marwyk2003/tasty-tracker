@@ -23,8 +23,10 @@ def home():
 def recipe(rid):
     vm = Recipe(db, int(rid), USER_ID)
     vm.load()
-    if request.method == 'POST':
+    if request.method == 'POST' and 'btn_liked' in request.form:
         vm.change_like()
+    elif request.method == 'POST' and 'btn_edit' in request.form:
+        return redirect(url_for('edit', rid=rid))
     return render_template('recipe.html', vm=vm)
 
 

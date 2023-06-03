@@ -1,0 +1,34 @@
+{% macro tile(name, diff, time, likes, url) -%}
+<div class="tile is-parent">
+    <article class="tile is-child notification is-info">
+        <section>
+            <a href="{{ url }}">
+                <p class="title">
+                    {{ name }}
+                </p>
+            </a>
+        </section>
+        <br/>
+        <section>
+            <p class="has-icons-left subtitle pl-5">
+            <span class="icon is-left">
+              <i class="fa fa-thermometer-half"></i>
+            </span>
+                difficulty: <strong>{{ diff }}</strong>
+            </p>
+            <p class="has-icons-left subtitle pl-5">
+            <span class="icon is-left">
+              <i class="fa fa-clock-o"></i>
+            </span>
+                estimated time: <strong>{{ time }}</strong>
+            </p>
+            <p class="has-icons-left subtitle pl-5">
+            <span class="icon is-left">
+              <i class="fa fa-thumbs-up"></i>
+            </span>
+                likes: <strong>{{ likes }}</strong>
+            </p>
+        </section>
+    </article>
+</div>
+{%- endmacro %}
