@@ -37,12 +37,6 @@
                 <section>
                     <p class="has-icons-left subtitle pl-5">
                         <span class="icon is-left">
-                          <i class="fa fa-thumbs-up"></i>
-                        </span>
-                        <strong>{{ vm.likes }}</strong> people liked this recipe
-                    </p>
-                    <p class="has-icons-left subtitle pl-5">
-                        <span class="icon is-left">
                           <i class="fa fa-thermometer-half"></i>
                         </span>
                         difficulty: <strong>{{ vm.difficulty }}</strong>
@@ -60,11 +54,22 @@
                         utensil: <strong>{{ vm.utensil }}</strong>
                     </p>
                 </section>
-                </br>
+                <br/>
                 <section>
-                        {% for t in vm.tags %}
-                        <span class="tag is-info is-light is-rounded is-large">{{ t }}</span>
-                        {% endfor %}
+                    <form method="post">
+                        <button class="button {{ 'is-info' if vm.liked else ''}}">
+                        <span class="icon">
+                          <i class="fa fa-thumbs-up"></i>
+                        </span>
+                            <span><strong>{{ vm.likes }}</strong> people liked this recipe</span>
+                        </button>
+                    </form>
+                </section>
+                <br/>
+                <section>
+                    {% for t in vm.tags %}
+                    <span class="tag is-info is-light is-rounded is-large">{{ t }}</span>
+                    {% endfor %}
                 </section>
             </div>
             <div class="box">

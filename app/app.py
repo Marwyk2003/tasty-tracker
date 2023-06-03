@@ -18,18 +18,21 @@ def home():
     return render_template('index.html', vm=vm)
 
 
-@app.route('/recipe/<rid>')
+@app.route('/recipe/<rid>', methods=['GET', 'POST'])
 def recipe(rid):
-    vm = Recipe(db)
-    vm.load(rid)
+    vm = Recipe(db, rid, USER_ID)
+    vm.load()
+    if request.method == 'POST':
+        vm.change_like()
+        # change like in db
     return render_template('recipe.html', vm=vm)
 
 
 @app.route('/edit/<rid>', methods=['GET', 'POST'])
 def edit(rid):
     if request.method == 'GET':
-        vm = Recipe(db)
-        vm.load(rid)
+        vm = Recipe(db, rid, USER_ID)
+        vm.load()
         return render_template('recipe_form.html', vm=vm)
 
     if request.method == 'POST':
@@ -57,7 +60,7 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-            # print(username, password, flush=True)
+        # print(username, password, flush=True)
         return redirect('/')
 
 
