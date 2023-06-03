@@ -22,8 +22,9 @@ class Recipe:
     def load(self, id):
         self.id = id
         self.name, self.author_name, self.utensil, self.timestamp, \
-            self.body, self.difficulty, self.prep_time, self.likes = \
+            self.body, self.difficulty, prep_time, self.likes = \
             self.get_body(id)
+        self.prep_time = f'{prep_time.seconds // 3600:02d}:{prep_time.seconds % 3600 // 60:02d}'
         self.author_url = f'/user/{self.author_id}'
         self.ingredients = self.get_ingredients(id)
         self.tags = self.get_tags(id)
@@ -43,8 +44,8 @@ class Recipe:
     def get_ingredients(self, id):
         query = self.db.exec(
             f'''
-                        SELECT * from products_from_recpie({id});
-                    '''
+                SELECT * from products_from_recpie({id});
+            '''
         )
 
         # ((name, amount, unit), ...)

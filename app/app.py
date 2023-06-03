@@ -34,16 +34,18 @@ def edit(rid):
 
     if request.method == 'POST':
         vm = RecipeForm(db)
+        vm.id = rid
         vm.name = request.form.get('vm_name')
         vm.difficulty = request.form.get('vm_difficulty')
         vm.utensil = request.form.get('vm_utensil')
         vm.body = request.form.get('vm_body')
+        vm.prep_time = request.form.get('vm_time')
         vm.recipes = []
         for x in range(15):
             vm.ingredients += [[request.form.get(f'vm_ingredient_name_{x}'),
                                 request.form.get(f'vm_ingredient_amount_{x}'),
                                 request.form.get(f'vm_ingredient_unit_{x}')]]
-        vm.save()
+        vm.update()
         return redirect(url_for('recipe', rid=rid))
 
 
@@ -55,7 +57,7 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        print(username, password, flush=True)
+            # print(username, password, flush=True)
         return redirect('/')
 
 

@@ -12,21 +12,30 @@ db_string = 'postgresql://{}:{}@{}:{}/{}'.format(db_user, db_pass, db_host, db_p
 
 class Database:
     def __init__(self):
-        self.connection = psycopg2.connect(
-            database=db_name, user=db_user,
-            password=db_pass, host=db_host, port=db_port
-        )
-        self.cursor = self.connection.cursor()
-
-    def quit(self):
-        if self.connection:
-            self.cursor.close()
-            self.connection.close()
+        pass
 
     def exec(self, query):
         try:
+            self.connection = psycopg2.connect(
+                database=db_name, user=db_user,
+                password=db_pass, host=db_host, port=db_port
+            )
+            self.cursor = self.connection.cursor()
             self.cursor.execute(query)
             return self.cursor.fetchall()
-        except:
-            # TODO
-            pass
+        finally:
+            self.cursor.close()
+            self.connection.close()
+
+    def save(self, query):
+        try:
+            self.connection = psycopg2.connect(
+                database=db_name, user=db_user,
+                password=db_pass, host=db_host, port=db_port
+            )
+            self.cursor = self.connection.cursor()
+            self.cursor.execute(query)
+            self.connection.commit()
+        finally:
+            self.cursor.close()
+            self.connection.close()
