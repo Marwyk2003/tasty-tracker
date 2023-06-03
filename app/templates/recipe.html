@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Tasty Tracker - {{ vm.name }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+</head>
+
+<body>
+<section class="hero is-hidden-touch">
+    <div class="hero-body">
+        <figure class="image is-halfheight">
+            <img
+                    src="https://www.jadlonomia.com/wp-content/uploads/2019/09/IMG_9623_duze-1444x443.jpg"
+            />
+        </figure>
+    </div>
+</section>
+<div class="container">
+    <div class="columns">
+        <div class="column">
+            <div class="box">
+                <section class="section">
+                    <h1 class="title is-1">{{ vm.name }}</h1>
+                    <p class="subtitle pl-5">
+                        <a href="{{ vm.author_url }}"> @{{ vm.author_name }} </a>
+                        </br>
+                        created at: <small>{{ vm.timestamp }}</small>
+                    </p>
+                </section>
+                <section>
+                    <p class="has-icons-left subtitle pl-5">
+                        <span class="icon is-left">
+                          <i class="fa fa-thumbs-up"></i>
+                        </span>
+                        <strong>{{ vm.likes }}</strong> people liked this recipe
+                    </p>
+                    <p class="has-icons-left subtitle pl-5">
+                        <span class="icon is-left">
+                          <i class="fa fa-thermometer-half"></i>
+                        </span>
+                        difficulty: <strong>{{ vm.difficulty }}</strong>
+                    </p>
+                    <p class="has-icons-left subtitle pl-5">
+                        <span class="icon is-left">
+                          <i class="fa fa-clock-o"></i>
+                        </span>
+                        estimated time: <strong>{{ vm.prep_time }}</strong>
+                    </p>
+                    <p class="has-icons-left subtitle pl-5">
+                        <span class="icon is-left">
+                          <i class="fa fa-birthday-cake"></i>
+                        </span>
+                        utensil: <strong>{{ vm.utensil }}</strong>
+                    </p>
+                </section>
+                </br>
+                <section>
+                        {% for t in vm.tags %}
+                        <span class="tag is-info is-light is-rounded is-large">{{ t }}</span>
+                        {% endfor %}
+                </section>
+            </div>
+            <div class="box">
+                <section class="section">
+                    {% for p in vm.body %}
+                    <p class="subtitle pl-5">
+                        {{ p }}
+                    </p>
+                    {% endfor %}
+                </section>
+            </div>
+        </div>
+        <div class="column is-one-third">
+            <div class="box">
+                <div class="content">
+                    <section class="section">
+                        <h1 class="title">Składniki</h1>
+                        <table>
+                            <tbody>
+                            {% for ing in vm.ingredients %}
+                            <tr>
+                                <td>{{ing[0]}}</td>
+                                <td>{{ing[1]}} {{ing[2]}}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+            <div class="box">
+                {% for c in vm.constraints %}
+                <span class="tag is-success is-light is-rounded is-large">{{ c }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="box">
+        {% from "comment.html" import comment with context %}
+        {% for c in vm.comments %}
+        {{ comment(*c) }}
+        {% endfor %}
+    </div>
+</div>
+</body>
+</html>

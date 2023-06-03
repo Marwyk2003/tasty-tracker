@@ -1,0 +1,21 @@
+{% macro comment(username, content, comment_id, parent) -%}
+<article class="media">
+    <figure class="media-left">
+        <p class="image is-64x64">
+            <img src="https://bulma.io/images/placeholders/128x128.png">
+        </p>
+    </figure>
+    <div class="media-content">
+        <div class="content">
+            <p>
+                <small>#{{ comment_id }} </small><strong>{{ username }}</strong>
+                {% if parent!=None %}
+                <small>In response to: #{{ parent }}</small>
+                {% endif %}
+                </br>
+                {{ content }}
+            </p>
+        </div>
+    </div>
+</article>
+{%- endmacro %}

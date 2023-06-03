@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Tasty Tracker - Edit {{ vm.name }}</title>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+</head>
+
+<body>
+<section class="hero is-hidden-touch">
+    <div class="hero-body">
+        <figure class="image is-halfheight">
+            <img
+                    src="https://www.jadlonomia.com/wp-content/uploads/2019/09/IMG_9623_duze-1444x443.jpg"
+            />
+        </figure>
+    </div>
+</section>
+<div class="container">
+    <form method="post">
+        <div class="columns">
+            <div class="column">
+                <div class="box">
+                    <section class="section">
+                        <input name="vm_name" class="input is-large" type="text" placeholder="Name of the recipe" value="{{ vm.name }}">
+
+                        <div class="control has-icons-left">
+                            <div class="select">
+                                <select name="vm_difficulty">
+                                    <option selected>very easy</option>
+                                    <option>easy</option>
+                                    <option>medium</option>
+                                    <option>hard</option>
+                                    <option>very Hard</option>
+                                </select>
+                            </div>
+                            <p class="icon is-left">
+                                <i class="fa fa-thermometer-half"></i>
+                            </p>
+                        </div>
+
+                        <div class="control has-icons-left">
+                            <div class="select">
+                                <select name="vm_utensil">
+                                    <option selected>rectangular tin</option>
+                                    <option>round tin</option>
+                                    <option>round tin with chimney</option>
+                                    <option>ovenproof dish</option>
+                                    <option>tart tin</option>
+                                    <option>muffin tin</option>
+                                    <option>loaf tin</option>
+                                </select>
+                            </div>
+                            <p class="icon is-left">
+                                <i class="fa fa-birthday-cake"></i>
+                            </p>
+                        </div>
+
+                        <div class="control has-icons-left">
+                            <input name="vm_time" class="input" type="text" required pattern="[0-9]{2}:[0-9]{2}"
+                                   placeholder="Estimated time (hh:mm)" value="{{ vm.prep_time }}">
+                            <span class="icon is-left">
+                                <i class="fa fa-clock-o"></i>
+                            </span>
+                        </div>
+                    </section>
+                </div>
+                <div class="box">
+                    <section class="section">
+                        <p class="subtitle pl-5">
+                            <textarea name="vm_body" class="textarea" style="min-height: 500px;">{{ '\n\n'.join(vm.body) }}</textarea>
+                        </p>
+                    </section>
+                </div>
+            </div>
+            <div class="column is-one-third">
+                <div class="box">
+                    <div class="content">
+                        {% for x in range(15) %}
+                        <div class="control">
+                            <input name="vm_ingredient_name_{{ x }}" class="input is-expanded is-small" type="text"
+                                   placeholder="name" value="{{ vm.ingredients[x][0] }}">
+                        </div>
+                        <div class="field has-addons">
+                            <div class="control">
+                                <input name="vm_ingredient_amount_{{ x }}" class="input is-small" type="text"
+                                       placeholder="amount" value="{{ vm.ingredients[x][1] }}">
+                            </div>
+                            <div class="control">
+                                <input name="vm_ingredient_unit_{{ x }}" class="input is-small" type="text"
+                                       placeholder="unit" value="{{ vm.ingredients[x][2] }}">
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="control is-expanded">
+                        <button type="submit" class="button is-large is-fullwidth is-info">
+                    <span class="icon is-medium">
+                      <i class="fa fa-save"></i>
+                    </span>
+                            <span>Save</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
