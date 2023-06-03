@@ -1,6 +1,6 @@
 class RecipeForm:
-    def __init__(self, db):
-        self.id = None
+    def __init__(self, db, id):
+        self.id = id
         self.name = ''
         self.author = ''
         self.difficulty = ''

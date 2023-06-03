@@ -15,27 +15,27 @@ class Database:
         pass
 
     def exec(self, query):
+        connection = psycopg2.connect(
+            database=db_name, user=db_user,
+            password=db_pass, host=db_host, port=db_port
+        )
+        cursor = connection.cursor()
         try:
-            self.connection = psycopg2.connect(
-                database=db_name, user=db_user,
-                password=db_pass, host=db_host, port=db_port
-            )
-            self.cursor = self.connection.cursor()
-            self.cursor.execute(query)
-            return self.cursor.fetchall()
+            cursor.execute(query)
+            return cursor.fetchall()
         finally:
-            self.cursor.close()
-            self.connection.close()
+            cursor.close()
+            connection.close()
 
     def save(self, query):
+        connection = psycopg2.connect(
+            database=db_name, user=db_user,
+            password=db_pass, host=db_host, port=db_port
+        )
+        cursor = connection.cursor()
         try:
-            self.connection = psycopg2.connect(
-                database=db_name, user=db_user,
-                password=db_pass, host=db_host, port=db_port
-            )
-            self.cursor = self.connection.cursor()
-            self.cursor.execute(query)
-            self.connection.commit()
+            cursor.execute(query)
+            connection.commit()
         finally:
-            self.cursor.close()
-            self.connection.close()
+            cursor.close()
+            connection.close()

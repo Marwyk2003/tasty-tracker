@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from viewmodels.RecipeList import RecipeList
 from viewmodels.RecipeForm import RecipeForm
 from viewmodels.Recipe import Recipe
+from viewmodels.Login import Login
 from db import Database
 
 app = Flask(__name__)
@@ -20,11 +21,10 @@ def home():
 
 @app.route('/recipe/<rid>', methods=['GET', 'POST'])
 def recipe(rid):
-    vm = Recipe(db, rid, USER_ID)
+    vm = Recipe(db, int(rid), USER_ID)
     vm.load()
     if request.method == 'POST':
         vm.change_like()
-        # change like in db
     return render_template('recipe.html', vm=vm)
 
 
@@ -36,8 +36,7 @@ def edit(rid):
         return render_template('recipe_form.html', vm=vm)
 
     if request.method == 'POST':
-        vm = RecipeForm(db)
-        vm.id = rid
+        vm = RecipeForm(db, int(rid))
         vm.name = request.form.get('vm_name')
         vm.difficulty = request.form.get('vm_difficulty')
         vm.utensil = request.form.get('vm_utensil')
@@ -58,9 +57,14 @@ def login():
         return render_template('login.html')
 
     if request.method == 'POST':
+        login = Login(db)
         username = request.form.get('username')
         password = request.form.get('password')
-        # print(username, password, flush=True)
+        global USER_ID
+        USER_ID = login.login(username, password)
+        print(f'Now logged in as: {USER_ID}', flush=True)
+        if USER_ID is None:
+            return redirect(url_for('login'))
         return redirect('/')
 
 
