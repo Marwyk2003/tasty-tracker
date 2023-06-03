@@ -185,6 +185,66 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION add_all_ingredients(recipe integer, product_name varchar(60)[], id_category integer[], amount numeric(4, 2)[], unit unit_enum[])
+-- YOU NEED TO CAST ARRAYS!!! like that
+-- add_all_ingredients(1, ARRAY['unsalted butter','lol']::varchar(60)[], ARRAY[7,3], ARRAY[250,100], ARRAY['g','l']::unit_enum[]);
+RETURNS void AS $$
+DECLARE
+  id integer;
+  i integer;
+BEGIN
+DELETE FROM recipes_products WHERE id_recipe=recipe;
+FOR i IN 1..array_length(product_name,1)
+LOOP 
+  PERFORM add_ingredient(recipe,product_name[i],id_category[i],amount[i],unit[i]);
+END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION update_recipe(id_recipe_ int,body_ text[])--archives previous version
+RETURNS void AS
+$$
+  BEGIN
+    INSERT INTO archival_recipes VALUES(DEFAULT,id_recipe_,DEFAULT,(SELECT recipes.body FROM recipes WHERE recipes.id_recipe=id_recipe_));
+    UPDATE recipes SET body=body_ WHERE id_recipe=id_recipe_;
+  END;
+$$LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION add_all_tags(recipe integer, id_tag integer[])
+RETURNS void AS $$
+DECLARE
+  i integer;
+BEGIN
+DELETE FROM recipes_tags WHERE id_recipe=recipe;
+FOR i IN 1..array_length(id_tag,1)
+LOOP 
+  INSERT INTO recipes_tags VALUES(recipe,id_tag[i]);
+END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION last_modified(id_recipe_ int)
+RETURNS timestamp AS
+$$
+  BEGIN
+    RETURN COALESCE((SELECT MAX(archivised) FROM archival_recipes WHERE id_recipe_=id_recipe),(SELECT added_at FROM recipes WHERE id_recipe_=id_recipe));
+  END;
+$$LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION shopping_list(list int[])
+RETURNS TABLE(id_product int, product_name varchar(100)) AS
+$$
+  BEGIN
+  RETURN QUERY SELECT DISTINCT products.id_product,products.name 
+  FROM products JOIN recipes_products USING(id_product)
+  JOIN recipes USING(id_recipe) WHERE id_recipe IN (SELECT unnest(list));
+  END;
+$$LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION users_notes(id_recipe_ int,id_user_ int)
+RETURNS TABLE(id_note int, body text) AS
+$$
+  BEGIN
+  RETURN QUERY SELECT notes.id_note,notes.body FROM notes WHERE id_user=id_user_ AND id_recipe=id_recipe_;
+  END;
+$$LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION tags_from_recipe(recipe integer)
 RETURNS TABLE(tags varchar(60))  AS $$
 DECLARE
@@ -220,7 +280,7 @@ SELECT recipes.name,username,shape,added_at,body,id_recipe,difficulty,preparatio
 FROM recipes NATURAL JOIN users NATURAL JOIN forms; 
 
 CREATE OR REPLACE FUNCTION basic_from_recipe(recipe integer)
-RETURNS TABLE(name varchar(100),author varchar(40),shape shape_enum,added_at timestamp,body text[],difficulty difficulty_enum,preparation_time interval,likes bigint)  AS $$
+RETURNS TABLE(name varchar(100),author varchar(40),difficulty difficulty_enum,preparation_time interval,likes bigint)  AS $$
 DECLARE
 BEGIN
   RETURN QUERY SELECT recipe_info.name,username,recipe_info.shape,recipe_info.added_at,recipe_info.body,recipe_info.difficulty,recipe_info.preparation_time, COUNT(*) FROM recipe_info 
@@ -245,15 +305,6 @@ BEGIN
   WHERE id_recipe=recipe AND id_parent IS NULL;
 END;
 $$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION recipe_list()
-RETURNS TABLE(name varchar(100))  AS $$
-DECLARE
-BEGIN
-  RETURN QUERY SELECT recipes.name FROM recipes;
-END;
-$$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION recipes_with_products(list varchar(60)[])
 RETURNS TABLE(id_recipe int,name varchar(100))  AS $$
 DECLARE
@@ -273,22 +324,52 @@ CREATE OR REPLACE FUNCTION add_like(recipe int,userid int)
 RETURNS void AS $$
 DECLARE
 BEGIN
+	IF( NOT is_liked(recipe,userid)) THEN
   INSERT INTO users_liked VALUES(recipe,userid);
+  END IF;
 END;
 $$ LANGUAGE plpgsql;
-
+CREATE OR REPLACE FUNCTION is_liked(recipe integer, id_use integer)
+RETURNS boolean AS $$
+BEGIN
+    RETURN (SELECT COUNT(*) > 0
+    FROM users_liked
+    WHERE id_recipe = recipe AND id_user = id_use);
+END;
+$$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION del_like(recipe int,userid int)
+RETURNS void AS $$
+BEGIN
+    IF(is_liked(recipe,userid)) THEN
+		DELETE FROM users_liked WHERE id_recipe = recipe AND id_user = userid;
+	END IF;
+END;
+$$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION login(fusername varchar(40),fhash_password char(60))
+RETURNS integer AS
+$$
+  declare 
+    id int;
+  begin
+  SELECT id_user INTO id
+  FROM users
+  WHERE fusername=users.username AND fhash_password=users.hash_password;
+  IF id IS NOT NULL THEN RETURN id;
+  ELSE RETURN NULL;
+  END IF;
+  end;
+$$LANGUAGE plpgsql;
 --VIEWS
-CREATE OR REPLACE VIEW top_recipes AS
-SELECT recipes.name,COUNT(*) 
+CREATE OR REPLACE VIEW recipe_list AS
+SELECT recipes.id_recipe,recipes.name,recipes.difficulty,recipes.preparation_time,added_at,COUNT(*) AS likes
 FROM recipes 
 JOIN users_liked USING(id_recipe)
-GROUP BY id_recipe
-ORDER BY 2 DESC;
+GROUP BY recipes.id_recipe,recipes.name,recipes.difficulty,recipes.preparation_time,added_at;
+CREATE OR REPLACE VIEW top_recipes AS
+SELECT * FROM recipe_list ORDER BY likes DESC;
 
 CREATE OR REPLACE VIEW recent_recipes AS
-SELECT recipes.name,recipes.added_at 
-FROM recipes 
-ORDER BY 2 DESC;
+SELECT * FROM recipe_list ORDER BY added_at DESC;
 --INSERTS
 INSERT INTO categories VALUES(1, 'various'), (2, 'fruit'), (3, 'nuts and dried fruits'), (4, 'olives and oils'), (5, 'sweet'), (6, 'fragrants'), (7, 'dairy and eggs'), (8, 'cereal products');
 INSERT INTO restrictions VALUES(1, 'vegan'), (2, 'nuts'), (3, 'lactose');
