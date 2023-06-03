@@ -38,9 +38,9 @@ CREATE TABLE restrictions (
 
 CREATE TABLE users (
 	id_user              serial,
-	username             varchar(40) NOT NULL,
+	username             varchar(40) unique NOT NULL,
 	hash_password        char(60) NOT NULL,
-	created_at           timestamp DEFAULT CURRENT_DATE NOT NULL,
+	created_at           timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT pk_users PRIMARY KEY (id_user)
 );
 
@@ -55,11 +55,11 @@ CREATE TABLE recipes (
 	name		     	 varchar(100) NOT NULL,
 	id_user              integer,
 	id_form              integer,
-	added_at             timestamp DEFAULT CURRENT_DATE NOT NULL,
+	added_at             timestamp DEFAULT now() NOT NULL,
 	difficulty           difficulty_enum,
 	preparation_time     interval,
 	body                 text[] NOT NULL,
-	source_type 	     integer,
+	source_type 	     integer CHECK(source_type>=0 AND source_type<=2),--0-no source,1-external source,2-internal source
 	id_source 	     integer,
 	CONSTRAINT pk_recipes PRIMARY KEY (id_recipe)
 );
@@ -73,13 +73,8 @@ CREATE TABLE sources (
 CREATE TABLE archival_recipes (
 	id_archival_reicpe   serial,
 	id_recipe            integer NOT NULL,
-	name		     	 varchar(100) NOT NULL,
-	id_user              integer,
-	id_form              integer,
-	added_at             timestamp NOT NULL,
-	difficulty           difficulty_enum,
-	preparation_time     interval,
-	body                 text NOT NULL,
+	archivised			 timestamp DEFAULT now() NOT NULL,
+	body                 text[] NOT NULL,
 	CONSTRAINT pk_archival_recipes PRIMARY KEY (id_archival_reicpe)
 );
 ALTER TABLE recipes ADD CONSTRAINT positive_time CHECK (preparation_time > '0 seconds');
@@ -201,6 +196,24 @@ END LOOP;
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION update_recipe(id_recipe_ int,body_ text[])--archives previous version
+RETURNS void AS
+$$
+  BEGIN
+    INSERT INTO archival_recipes VALUES(DEFAULT,id_recipe_,DEFAULT,(SELECT recipes.body FROM recipes WHERE recipes.id_recipe=id_recipe_));
+    UPDATE recipes SET body=body_ WHERE id_recipe=id_recipe_;
+  END;
+$$LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION last_modified(id_recipe_ int)
+RETURNS timestamp AS
+$$
+  BEGIN
+    RETURN COALESCE((SELECT MAX(archivised) FROM archival_recipes WHERE id_recipe_=id_recipe),(SELECT added_at FROM recipes WHERE id_recipe_=id_recipe));
+  END;
+$$LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION tags_from_recipe(recipe integer)
 RETURNS TABLE(tags varchar(60))  AS $$
 DECLARE
@@ -283,6 +296,24 @@ BEGIN
   HAVING COUNT(DISTINCT products.name)=array_length(list,1);
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION shopping_list(list int[])
+RETURNS TABLE(id_product int, product_name varchar(100)) AS
+$$
+  BEGIN
+  RETURN QUERY SELECT DISTINCT products.id_product,products.name 
+  FROM products JOIN recipes_products USING(id_product)
+  JOIN recipes USING(id_recipe) WHERE id_recipe IN (SELECT unnest(list));
+  END;
+$$LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION users_notes(id_recipe_ int,id_user_ int)
+RETURNS TABLE(id_note int, body text) AS
+$$
+  BEGIN
+  RETURN QUERY SELECT notes.id_note,notes.body FROM notes WHERE id_user=id_user_ AND id_recipe=id_recipe_;
+  END;
+$$LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION add_like(recipe int,userid int)
 RETURNS void AS $$
@@ -440,9 +471,9 @@ INSERT INTO users VALUES
 (DEFAULT, 'sugarglazeddonuts29', 'kCSXNSKykIitbBcUZwJVDtQAMnUnLJsNaebUFERKVCVPX', current_timestamp-'20 hours 35 minutes'::interval),
 (DEFAULT, 'sweetsensation79', 'DCzafauiKgXqTxMELIqjtLLBomoHEPrMMYVdLbkulddrD', current_timestamp-'88 hours 26 minutes'::interval),
 (DEFAULT, 'pieperfection42', 'VyVOIkagYRHcIXZGNtuCGKHLtciZvfkqenKVHowgMOtbt', current_timestamp-'34 hours 57 minutes'::interval),
-(DEFAULT, 'cookiecravings56', 'tMwQkBpOngxNZqwehpdZMMoGklpBMSrOiNPbxwMCtmjGr', current_timestamp-'43 hours 35 minutes'::interval),
+(DEFAULT, 'sus', 'tMwQkBpOngxNZqwehpdZMMoGklpBMSrOiNPbxwMCtmjGr', current_timestamp-'43 hours 35 minutes'::interval),
 (DEFAULT, 'muffinlover21', 'AtvSnEVqgEEPGDvuumRuwExhFihuOxwkctsEGpfDFZgoh', current_timestamp-'26 hours 35 minutes'::interval),
-(DEFAULT, 'chocolatechipdreams88', 'NCyIczAtWHnExcyLdAfLOAeyNteKLCSzSPlaxeZxuZeEX', current_timestamp-'30 hours 19 minutes'::interval),
+(DEFAULT, 'amogus', 'NCyIczAtWHnExcyLdAfLOAeyNteKLCSzSPlaxeZxuZeEX', current_timestamp-'30 hours 19 minutes'::interval),
 (DEFAULT, 'whiskmeaway39', 'jxYJXRKMYAmRvyjwZjOYsrLUYKeEQNCvZDUfeoQyYWtnk', current_timestamp-'36 hours 3 minutes'::interval),
 (DEFAULT, 'cupcaketemptation64', 'SMfMkXEocRyviLpNVpdAQcZzLgzNOUTSdVHuWYejSZqin', current_timestamp-'22 hours 9 minutes'::interval),
 (DEFAULT, 'sugarandspice96', 'cwTBxlKbgCSlgOUrRSgwYMrgyAqekHDPAlcvDFidNSgMg', current_timestamp-'12 hours 13 minutes'::interval),
