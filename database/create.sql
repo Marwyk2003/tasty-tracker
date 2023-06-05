@@ -121,20 +121,19 @@ CREATE TABLE users_liked_comments (
 CREATE TABLE notes (
 	id_note              serial,
 	id_recipe 	     integer NOT NULL,
-	id_user 	     integer NOT NULL,
 	body 		     text NOT NULL,
 	CONSTRAINT pk_notes PRIMARY KEY (id_note)
 );
 
 CREATE TABLE comments (
 	id_comment 	     serial,
-	id_recipe 	     integer NOT NULL,--we need to add trigger to make sure that id_recipe=parent.id_recipe
+	id_recipe 	     integer NOT NULL, --we need to add trigger to make sure that id_recipe = parent.id_recipe
 	id_user 	     integer NOT NULL,
 	id_parent 	     integer,
 	body 		     text NOT NULL,
 	CONSTRAINT pk_comments PRIMARY KEY(id_comment)
 );
---CONSTRINTS
+--CONSTRAINTS
 ALTER TABLE recipes ADD CONSTRAINT fk_recipes_user FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE SET NULL;
 ALTER TABLE recipes ADD CONSTRAINT fk_recipes_form FOREIGN KEY (id_form) REFERENCES forms(id_form);
 
@@ -155,7 +154,6 @@ ALTER TABLE recipes_utensils ADD CONSTRAINT fk_recipes_utensils_recipe FOREIGN K
 ALTER TABLE recipes_utensils ADD CONSTRAINT fk_recipes_utensils_utensil FOREIGN KEY (id_utensil) REFERENCES utensils(id_utensil);
 
 ALTER TABLE notes ADD CONSTRAINT fk_notes_recipe FOREIGN KEY (id_recipe) REFERENCES recipes(id_recipe);
-ALTER TABLE notes ADD CONSTRAINT fk_notes_user FOREIGN KEY (id_user) REFERENCES users(id_user);
 
 ALTER TABLE comments ADD CONSTRAINT fk_comment_recipe FOREIGN KEY (id_recipe) REFERENCES recipes(id_recipe);
 ALTER TABLE comments ADD CONSTRAINT fk_comment_user FOREIGN KEY (id_user) REFERENCES users(id_user);
@@ -236,11 +234,11 @@ $$
   END;
 $$LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION users_notes(id_recipe_ int, id_user_ int)
+CREATE OR REPLACE FUNCTION users_notes(id_recipe_ int, id_user_ int)   -- tu trzeba sprawdzić, czy użytkownik jest autorem przepisu
 RETURNS TABLE(id_note int, body text) AS
 $$
   BEGIN
-  RETURN QUERY SELECT notes.id_note, notes.body FROM notes WHERE id_user=id_user_ AND id_recipe=id_recipe_;
+  RETURN QUERY SELECT notes.id_note, notes.body FROM notes WHERE id_recipe=id_recipe_;
   END;
 $$LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION tags_from_recipe(recipe integer)
@@ -24868,4 +24866,133 @@ INSERT INTO users_liked_comments VALUES
 (149, 345),
 (149, 323),
 (149, 70)
+;
+
+INSERT INTO notes VALUES 
+(DEFAULT, 68, 'Maybe less sugar'),
+(DEFAULT, 5, 'Maybe less sugar'),
+(DEFAULT, 61, 'A bit too sweet'),
+(DEFAULT, 22, 'Add a pinch of salt to the dough'),
+(DEFAULT, 23, 'Bake 10 minutes longer'),
+(DEFAULT, 39, 'Tastes best in two days after preparation'),
+(DEFAULT, 70, 'Tastes best on first after preparation'),
+(DEFAULT, 1, 'Tastes best on third days after preparation'),
+(DEFAULT, 22, 'Add more sugar'),
+(DEFAULT, 58, 'Try with whole grain flour'),
+(DEFAULT, 8, 'Replace sugar with powdered sugar'),
+(DEFAULT, 48, 'Try adding spices'),
+(DEFAULT, 43, 'Try adding cocoa powder'),
+(DEFAULT, 4, 'Try for family gathering'),
+(DEFAULT, 56, 'Try different tin shape'),
+(DEFAULT, 10, 'Try different tin shape'),
+(DEFAULT, 86, 'Try different tin shape'),
+(DEFAULT, 9, 'Add less sugar'),
+(DEFAULT, 78, 'Looks nice decorated with rose petals'),
+(DEFAULT, 8, 'Be careful not to overbake'),
+(DEFAULT, 44, 'Keep the exact baking time'),
+(DEFAULT, 100, 'Add chocolate for decoration'),
+(DEFAULT, 23, 'Decorate with fresh mint leaves'),
+(DEFAULT, 85, 'Decorate with edible flowers'),
+(DEFAULT, 22, 'May be decorated with flower petals'),
+(DEFAULT, 103, 'Use powdered sugar for smoother pastry'),
+(DEFAULT, 100, 'Experiment with tin shape'),
+(DEFAULT, 57, 'Possible to add food colouring'),
+(DEFAULT, 2, 'Do not bake longer than said in the recipe!'),
+(DEFAULT, 96, 'You can use brown sugar'),
+(DEFAULT, 87, 'Try with rice flour'),
+(DEFAULT, 90, 'Tastes well with brown sugar'),
+(DEFAULT, 36, 'Try with out flour'),
+(DEFAULT, 88, 'Slightly less sugar'),
+(DEFAULT, 63, 'Not very sweet'),
+(DEFAULT, 84, 'Semi sweet'),
+(DEFAULT, 50, 'Good proportions for bigger tin'),
+(DEFAULT, 90, 'Yummy, repeat'),
+(DEFAULT, 93, 'Works well with vegan substitutes'),
+(DEFAULT, 60, 'Try replacing sugar with honey'),
+(DEFAULT, 14, 'Add white chocolate for sweetness'),
+(DEFAULT, 68, 'Add white chocolate'),
+(DEFAULT, 77, 'Easy to overbake'),
+(DEFAULT, 72, 'Keep exact proportions'),
+(DEFAULT, 38, 'Add some chocolate'),
+(DEFAULT, 46, 'May taste good with chopped almonds'),
+(DEFAULT, 3, 'Add food fragrant'),
+(DEFAULT, 56, 'Consider adding a fragrant'),
+(DEFAULT, 69, 'Add a fragrant if for Christmas'),
+(DEFAULT, 13, 'Easy to overbake'),
+(DEFAULT, 27, 'Easy to underbake'),
+(DEFAULT, 83, 'Very easy to overbake'),
+(DEFAULT, 89, 'Good for friend celebrations'),
+(DEFAULT, 51, 'Check carefully if baked well when taking out from the oven'),
+(DEFAULT, 51, 'Nice for family celebrations'),
+(DEFAULT, 51, 'Aunt Velma did not like it'),
+(DEFAULT, 12, 'Good to go'),
+(DEFAULT, 36, 'Nice with ice cream'),
+(DEFAULT, 49, 'Good match with ice cream'),
+(DEFAULT, 94, 'Prepare double portion for whole family'),
+(DEFAULT, 32, 'Prepare double portion for five people'),
+(DEFAULT, 75, 'Single portion is not enough'),
+(DEFAULT, 80, 'Single portion is not enough'),
+(DEFAULT, 52, 'Use bigger tin'),
+(DEFAULT, 92, 'Keep exact proportions'),
+(DEFAULT, 73, 'Keep exact proportions'),
+(DEFAULT, 96, 'Not so easy'),
+(DEFAULT, 94, 'Not so hard to do'),
+(DEFAULT, 23, 'Add decorations'),
+(DEFAULT, 93, 'Maybe add nuts'),
+(DEFAULT, 62, 'Maybe add some seasonings'),
+(DEFAULT, 11, 'try with fragrant'),
+(DEFAULT, 73, 'Medium difficulty'),
+(DEFAULT, 17, 'Medium difficulty'),
+(DEFAULT, 83, 'Medium difficulty'),
+(DEFAULT, 37, 'Medium preparation time'),
+(DEFAULT, 2, 'Does not take so much time if ingredients prepared before'),
+(DEFAULT, 2, 'Prepare ingredients before'),
+(DEFAULT, 76, 'Start preparation before'),
+(DEFAULT, 69, 'Take ingredients from the fridge before'),
+(DEFAULT, 19, 'Keep ingredients in room temperature'),
+(DEFAULT, 75, 'Keep ingredients in room temperature'),
+(DEFAULT, 67, 'Keep ingredients in room temperature'),
+(DEFAULT, 64, 'Keep ingredients in room temperature'),
+(DEFAULT, 70, 'Pastry is quite dense'),
+(DEFAULT, 10, 'Not so easy to do'),
+(DEFAULT, 46, 'Quite complex'),
+(DEFAULT, 94, 'Low difficulty'),
+(DEFAULT, 55, 'Try again, give it a chance'),
+(DEFAULT, 41, 'Give it another chance'),
+(DEFAULT, 9, 'Very good, always works'),
+(DEFAULT, 30, 'Always perfect'),
+(DEFAULT, 33, 'hildren liked it'),
+(DEFAULT, 50, 'Good for children'),
+(DEFAULT, 51, 'Try with seasonal fruit'),
+(DEFAULT, 103, 'Try with seasonal fruit'),
+(DEFAULT, 2, 'Try with seasonal fruit'),
+(DEFAULT, 82, 'Try with seasonal fruit'),
+(DEFAULT, 40, 'A bit dry'),
+(DEFAULT, 37, 'Good dessert for gatherings'),
+(DEFAULT, 97, 'It maybe a picnic dessert idea'),
+(DEFAULT, 32, 'Very nice, certainly sth to prepare again'),
+(DEFAULT, 84, 'Give it another chance'),
+(DEFAULT, 38, 'Try one more time with altered proportion of dry ingredients'),
+(DEFAULT, 36, 'Sift dry ingredients!'),
+(DEFAULT, 7, 'Sift dry ingredients for better consistency'),
+(DEFAULT, 3, 'Sift dry ingredients for better consistency'),
+(DEFAULT, 80, 'Sift dry ingredients for better consistency'),
+(DEFAULT, 75, 'Give it one more try'),
+(DEFAULT, 72, 'Give it one more try'),
+(DEFAULT, 77, 'Give it one more try'),
+(DEFAULT, 49, 'Prepare at least 4 hours before serving'),
+(DEFAULT, 86, 'Prepare at least 1 hour before serving'),
+(DEFAULT, 32, 'Prepare at least 2 hours before serving'),
+(DEFAULT, 88, 'Can be a to go dessert'),
+(DEFAULT, 9, 'Not as good as to-go-dessert'),
+(DEFAULT, 34, 'Might be a to go dessert'),
+(DEFAULT, 41, 'Not so good as to-go'),
+(DEFAULT, 12, 'Sift all dry ingredients!'),
+(DEFAULT, 63, 'Sift the flour'),
+(DEFAULT, 38, 'Use mixer instead of whisk'),
+(DEFAULT, 37, 'Using whisk is enough'),
+(DEFAULT, 50, 'Very nice for parties'),
+(DEFAULT, 62, 'Liked by kids'),
+(DEFAULT, 89, 'Left for some time before serving'),
+(DEFAULT, 50, 'Quite experimental')
 ;
