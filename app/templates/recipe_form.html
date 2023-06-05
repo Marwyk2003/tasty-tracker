@@ -30,7 +30,8 @@
             <div class="column">
                 <div class="box">
                     <section class="section">
-                        <input name="vm_name" class="input is-large" type="text" placeholder="Name of the recipe" value="{{ vm.name }}">
+                        <input name="vm_name" class="input is-large" type="text" placeholder="Name of the recipe"
+                               value="{{ vm.name }}">
 
                         <div class="control has-icons-left">
                             <div class="select">
@@ -94,9 +95,16 @@
                                 <input name="vm_ingredient_amount_{{ x }}" class="input is-small" type="text"
                                        placeholder="amount" value="{{ vm.ingredients[x][1] }}">
                             </div>
-                            <div class="control">
-                                <input name="vm_ingredient_unit_{{ x }}" class="input is-small" type="text"
-                                       placeholder="unit" value="{{ vm.ingredients[x][2] }}">
+                            <div class="select is-small">
+                                <select name="vm_ingredient_unit_{{ x }}">
+                                    <option selected>{{ vm.ingredients[x][2] }}</option>
+                                    <option>ml</option>
+                                    <option>l</option>
+                                    <option>tsp</option>
+                                    <option>tbsp</option>
+                                    <option>pinch</option>
+                                    <option>piece</option>
+                                </select>
                             </div>
                         </div>
                         {% endfor %}

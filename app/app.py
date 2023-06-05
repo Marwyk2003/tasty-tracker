@@ -23,7 +23,7 @@ def home():
 def recipe(rid):
     vm = Recipe(db, int(rid), USER_ID)
     vm.load()
-    if request.method == 'POST' and 'btn_liked' in request.form:
+    if request.method == 'POST' and 'btn_like' in request.form:
         vm.change_like()
     elif request.method == 'POST' and 'btn_edit' in request.form:
         return redirect(url_for('edit', rid=rid))
@@ -38,7 +38,7 @@ def edit(rid):
         return render_template('recipe_form.html', vm=vm)
 
     if request.method == 'POST':
-        vm = RecipeForm(db, int(rid))
+        vm = RecipeForm(db, int(rid), USER_ID, edit=True)
         vm.name = request.form.get('vm_name')
         vm.difficulty = request.form.get('vm_difficulty')
         vm.utensil = request.form.get('vm_utensil')
@@ -51,6 +51,28 @@ def edit(rid):
                                 request.form.get(f'vm_ingredient_unit_{x}')]]
         vm.update()
         return redirect(url_for('recipe', rid=rid))
+
+
+@app.route('/new', methods=['GET', 'POST'])
+def new():
+    if request.method == 'GET':
+        vm = Recipe(db, None, USER_ID)
+        return render_template('recipe_form.html', vm=vm)
+
+    if request.method == 'POST':
+        vm = RecipeForm(db, None, USER_ID, edit=False)
+        vm.name = request.form.get('vm_name')
+        vm.difficulty = request.form.get('vm_difficulty')
+        vm.utensil = request.form.get('vm_utensil')
+        vm.body = request.form.get('vm_body')
+        vm.prep_time = request.form.get('vm_time')
+        vm.recipes = []
+        for x in range(15):
+            vm.ingredients += [[request.form.get(f'vm_ingredient_name_{x}'),
+                                request.form.get(f'vm_ingredient_amount_{x}'),
+                                request.form.get(f'vm_ingredient_unit_{x}')]]
+        vm.update()
+        return redirect(url_for('recipe', rid=vm.id))
 
 
 @app.route('/login/', methods=['GET', 'POST'])
@@ -67,6 +89,7 @@ def login():
         print(f'Now logged in as: {USER_ID}', flush=True)
         if USER_ID is None:
             return redirect(url_for('login'))
+        USER_ID = int(USER_ID)
         return redirect('/')
 
 

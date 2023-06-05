@@ -24,6 +24,7 @@ class Database:
             cursor.execute(query)
             return cursor.fetchall()
         finally:
+            connection.commit()
             cursor.close()
             connection.close()
 
@@ -35,7 +36,21 @@ class Database:
         cursor = connection.cursor()
         try:
             cursor.execute(query)
-            connection.commit()
         finally:
+            connection.commit()
+            cursor.close()
+            connection.close()
+
+    def insert(self, query):
+        connection = psycopg2.connect(
+            database=db_name, user=db_user,
+            password=db_pass, host=db_host, port=db_port
+        )
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            return cursor.fetchone()
+        finally:
+            connection.commit()
             cursor.close()
             connection.close()

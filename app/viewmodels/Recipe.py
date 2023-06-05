@@ -1,6 +1,3 @@
-import random
-
-
 class Recipe:
     def __init__(self, db, recipe_id, user_id):
         self.id = recipe_id

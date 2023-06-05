@@ -88,7 +88,7 @@ CREATE TABLE recipes_products (
 	id_recipe            integer NOT NULL,
 	id_product           integer NOT NULL,
 	unit                 unit_enum NOT NULL,
-	amount               integer NOT NULL,
+	amount               numeric(6,2) NOT NULL,
 	CONSTRAINT pk_recipe_products PRIMARY KEY(id_recipe, id_product)
 );
 ALTER TABLE recipes_products ADD CONSTRAINT positive_amount CHECK (amount > 0);
@@ -171,7 +171,7 @@ ALTER TABLE users_liked ADD CONSTRAINT fk_users_liked_recipe FOREIGN KEY (id_rec
 ALTER TABLE users_liked_comments ADD CONSTRAINT fk_users_liked_user_comments FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE;
 ALTER TABLE users_liked_comments ADD CONSTRAINT fk_users_liked_recipe_comments FOREIGN KEY (id_comment) REFERENCES comments(id_comment) ON DELETE CASCADE;
 --FUNCTIONS
-CREATE OR REPLACE FUNCTION add_ingredient(recipe integer, product_name varchar(60), id_category integer, amount numeric(4, 2), unit unit_enum)
+CREATE OR REPLACE FUNCTION add_ingredient(recipe integer, product_name varchar(60), id_category integer, amount numeric(6,2), unit unit_enum)
 RETURNS void AS $$
 DECLARE
   id integer;
@@ -185,7 +185,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION add_all_ingredients(recipe integer, product_name varchar(60)[], id_category integer[], amount numeric(4, 2)[], unit unit_enum[])
+CREATE OR REPLACE FUNCTION add_all_ingredients(recipe integer, product_name varchar(60)[], id_category integer[], amount numeric(6,2)[], unit unit_enum[])
 -- YOU NEED TO CAST ARRAYS!!! like that
 -- add_all_ingredients(1, ARRAY['unsalted butter','lol']::varchar(60)[], ARRAY[7,3], ARRAY[250,100], ARRAY['g','l']::unit_enum[]);
 RETURNS void AS $$
@@ -256,7 +256,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION products_from_recpie(recipe integer)
-RETURNS TABLE(products varchar(60),amount integer, unit unit_enum) AS $$
+RETURNS TABLE(products varchar(60),amount numeric(6,2), unit unit_enum) AS $$
 BEGIN
 	RETURN QUERY SELECT products.name, recipes_products.amount,recipes_products.unit FROM recipes JOIN recipes_products USING(id_recipe)
 	JOIN products USING(id_product) WHERE recipe=id_recipe;
@@ -361,9 +361,9 @@ $$
 $$LANGUAGE plpgsql;
 --VIEWS
 CREATE OR REPLACE VIEW recipe_list AS
-SELECT recipes.id_recipe,recipes.name,recipes.difficulty,recipes.preparation_time,added_at,COUNT(*) AS likes
-FROM recipes 
-JOIN users_liked USING(id_recipe)
+SELECT recipes.id_recipe,recipes.name,recipes.difficulty,recipes.preparation_time,added_at,COUNT(users_liked.id_user) AS likes
+FROM recipes
+LEFT JOIN users_liked USING(id_recipe)
 GROUP BY recipes.id_recipe,recipes.name,recipes.difficulty,recipes.preparation_time,added_at;
 CREATE OR REPLACE VIEW top_recipes AS
 SELECT * FROM recipe_list ORDER BY likes DESC;
