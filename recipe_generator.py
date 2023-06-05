@@ -321,13 +321,43 @@ if __name__ == '__main__':
         coma = ''
         if recipe != [*recipes.keys()][-1]:
             coma = ','
-        print('(' + str(id) + ', \'' + recipes[recipe] + '\', ' + str(random.randint(1, 360)) + ', ' + str(formsList.index(forms[recipe])+1)
+        print('(DEFAULT, \'' + recipes[recipe] + '\', ' + str(random.randint(1, 360)) + ', ' + str(formsList.index(forms[recipe])+1)
               + ', current_timestamp-\'' + str(random.randint(2, 100)) + ' hours ' + str(random.randint(2, 60)) + ' minutes\'::interval, \''
               + str(difficulties[random.randint(1, 5)]) + '\', \'' + str(preparationTime) + ' minutes\'::interval, '
               + instructions + ', ' + sources[recipe][0] + ', ' + sources[recipe][1] + ')' + coma)
         recipe_ids[recipe] = id
         id += 1
     print(';')
+
+    # archival recipes
+    id = 0
+    for recipe in recipes:
+        id += 1
+        if random.choice([True, True, True, True, True, False]):
+            continue;
+
+        content = urllib.request.urlopen('https://www.waitrose.com/ecom/recipe/' + recipe).read().decode("utf8")
+        beg, end = content.find('datePublished'), content.find('aggregateRating')
+        content = content[beg:end]
+
+        beg = content.find('recipeInstructions')
+        instructions = content[beg:]
+        instructions = re.sub('recipeInstructions":\[', '', instructions)
+        instructions = re.sub('"}],"', '', instructions)
+        instructions = instructions.replace('\\r\\n', ' ')
+        instructionSteps = instructions.split('{"@type":"HowToStep","name":')
+        instructions = ''
+        instructionList = []
+        for instruction in instructionSteps:
+            instruction = re.sub('"},', '', instruction)
+            instruction = re.sub('"', '', instruction)
+            instruction = re.sub(',text:', ': ', instruction)
+            if len(instruction) > 0 and instruction[0] == ' ':
+                instruction = instruction[1:]
+            instructionList += ['"' + instruction + '"']
+        instructions = '\'{' + ', '.join(instructionList[1:]) + '}\''
+
+        print('UPDATE recipes SET body = ' + instructions + ' WHERE id_recipe = ' + str(id) + ';')
 
     # ingredients
     for recipe in recipes:
@@ -377,9 +407,9 @@ if __name__ == '__main__':
     for tag in tagList:
         tag_ids[tag] = id
         if tag != tagList[-1]:
-            print('(' + str(id) + ', \'' + tag + '\'),')
+            print('(DEFAULT, \'' + tag + '\'),')
         else:
-            print('(' + str(id) + ', \'' + tag + '\')')
+            print('(DEFAULT, \'' + tag + '\')')
         id += 1
     print(';')
     print('INSERT INTO recipes_tags VALUES ')
