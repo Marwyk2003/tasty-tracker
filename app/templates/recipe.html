@@ -13,6 +13,8 @@
 </head>
 
 <body>
+{% from "hero.html" import hero with context %}
+{{ hero(login_msg) }}
 <section class="hero is-hidden-touch">
     <div class="hero-body">
         <figure class="image is-halfheight">
@@ -37,19 +39,19 @@
                 <section>
                     <p class="has-icons-left subtitle pl-5">
                         <span class="icon is-left">
-                          <i class="fa fa-thermometer-half"></i>
+                          <i class="fa fa-thermometer-half" style="color: #3e8ed0"></i>
                         </span>
                         difficulty: <strong>{{ vm.difficulty }}</strong>
                     </p>
                     <p class="has-icons-left subtitle pl-5">
                         <span class="icon is-left">
-                          <i class="fa fa-clock-o"></i>
+                          <i class="fa fa-clock-o" style="color: #3e8ed0"></i>
                         </span>
                         estimated time: <strong>{{ vm.prep_time }}</strong>
                     </p>
                     <p class="has-icons-left subtitle pl-5">
                         <span class="icon is-left">
-                          <i class="fa fa-birthday-cake"></i>
+                          <i class="fa fa-birthday-cake" style="color: #3e8ed0"></i>
                         </span>
                         utensil: <strong>{{ vm.utensil }}</strong>
                     </p>

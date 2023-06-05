@@ -1,20 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Tasty Tracker</title>
-    <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
-    />
-    <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-</head>
-
-<body>
+{% macro hero(login_msg) -%}
 <section class="hero is-primary is-medium">
     <!-- Hero head: will stick at the top -->
     <div class="hero-head">
@@ -32,7 +16,7 @@
                     <div class="navbar-item">
                         <form method="post">
                             <button name='btn_login' type="submit" class="button is-primary is-inverted">
-                                <strong>{{ vm.login_msg }}</strong>
+                                <strong>{{ login_msg }}</strong>
                             </button>
                         </form>
                     </div>
@@ -41,21 +25,4 @@
         </nav>
     </div>
 </section>
-<section class="section">
-    {% from "tile.html" import tile with context %}
-    <div class="container">
-        {% for r in vm.recipes %}
-        <div class="tile is-ancestor">
-            <div class="tile is-horizontal">
-                <div class="tile is-vertical is-12">
-                    <div class="tile">
-                        {{ tile(*r) }}
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</section>
-</body>
-</html>
+{%- endmacro %}
