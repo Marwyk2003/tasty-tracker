@@ -1,12 +1,12 @@
 {% macro hero(login_msg) -%}
-<section class="hero is-primary is-medium">
+<section class="hero is-medium is-info">
     <!-- Hero head: will stick at the top -->
     <div class="hero-head">
         <nav class="navbar" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                 <a class="navbar-item" href="{{ url_for('home') }}">
                     <img class="mr-3" src="{{ url_for('static', filename='cookie.png') }}" width="32">
-                    <p class="title">
+                    <p class="title" style="color: white">
                         Tasty Tracker
                     </p>
                 </a>
@@ -16,13 +16,13 @@
                     <div class="navbar-item">
                         {% if login_msg=='Log out' %}
                         <form method="post">
-                            <button name='btn_new' type="submit" class="button is-primary is-inverted">
+                            <button name='btn_new' type="submit" class="button is-info is-inverted">
                                 <strong>New recipe</strong>
                             </button>
                         </form>
                         {% endif %}
                         <form method="post">
-                            <button name='btn_login' type="submit" class="button is-primary is-inverted ml-3">
+                            <button name='btn_login' type="submit" class="button is-info is-inverted ml-3">
                                 <strong>{{ login_msg }}</strong>
                             </button>
                         </form>

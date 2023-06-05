@@ -17,7 +17,7 @@ class RecipeForm:
         self.db = db
 
     def update(self):
-        body = self.body.split('\r\n\r\n')
+        body = [x.replace('\n', '<br/>') for x in self.body.replace('\r', '').split('\n\n')]
         prep_time = (f'{self.prep_time[:2]} hours '
                      if self.prep_time[:2] != '00' else '') + f'{self.prep_time[3:]} minutes'
 

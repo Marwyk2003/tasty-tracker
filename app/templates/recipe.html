@@ -92,7 +92,9 @@
                 <section class="section">
                     {% for p in vm.body %}
                     <p class="subtitle pl-5">
-                        {{ p }}
+                        {% autoescape false %}
+                        {{p}}
+                        {% endautoescape %}
                     </p>
                     {% endfor %}
                 </section>
