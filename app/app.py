@@ -18,13 +18,15 @@ def home():
     if request.method == 'GET':
         vm = RecipeList(db, USER_ID)
         vm.load()
-        return render_template('index.html', vm=vm)
+        return render_template('index.html', vm=vm, login_msg=login_msg())
     elif request.method == 'POST' and 'btn_login' in request.form:
         if USER_ID is None:
             return redirect(url_for('login'))
         else:
             USER_ID = None
             return redirect(url_for('home'))
+    elif request.method == 'POST' and 'btn_new' in request.form:
+        return redirect(url_for('new'))
     elif request.method == 'POST':
         return redirect(url_for('home'))
 
@@ -42,6 +44,8 @@ def recipe(rid):
         else:
             USER_ID = None
             return redirect(url_for('home'))
+    elif request.method == 'POST' and 'btn_new' in request.form:
+        return redirect(url_for('new'))
     elif request.method == 'POST' and 'btn_like' in request.form:
         vm.change_like()
         return redirect(url_for('recipe', rid=rid))
@@ -62,6 +66,8 @@ def edit(rid):
         else:
             USER_ID = None
             return redirect(url_for('home'))
+    elif request.method == 'POST' and 'btn_new' in request.form:
+        return redirect(url_for('new'))
     elif request.method == 'POST':
         vm = RecipeForm(db, int(rid), USER_ID, edit=True)
         vm.name = request.form.get('vm_name')
@@ -83,13 +89,15 @@ def new():
     global USER_ID
     if request.method == 'GET':
         vm = Recipe(db, None, USER_ID)
-        return render_template('recipe_form.html', vm=vm, login_msg=login_msg)
+        return render_template('recipe_form.html', vm=vm, login_msg=login_msg())
     elif request.method == 'POST' and 'btn_login' in request.form:
         if USER_ID is None:
             return redirect(url_for('login'))
         else:
             USER_ID = None
             return redirect(url_for('new'))
+    elif request.method == 'POST' and 'btn_new' in request.form:
+        return redirect(url_for('new'))
     elif request.method == 'POST':
         vm = RecipeForm(db, None, USER_ID, edit=False)
         vm.name = request.form.get('vm_name')

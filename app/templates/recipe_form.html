@@ -12,9 +12,12 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+    <link rel="icon" href="{{ url_for('static', filename='cookie.png') }}">
 </head>
 
 <body>
+{% from "hero.html" import hero with context %}
+{{ hero(login_msg) }}
 <section class="hero is-hidden-touch">
     <div class="hero-body">
         <figure class="image is-halfheight">

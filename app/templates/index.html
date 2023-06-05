@@ -12,35 +12,12 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+    <link rel="icon" href="{{ url_for('static', filename='cookie.png') }}">
 </head>
 
 <body>
-<section class="hero is-primary is-medium">
-    <!-- Hero head: will stick at the top -->
-    <div class="hero-head">
-        <nav class="navbar" role="navigation" aria-label="main navigation">
-            <div class="navbar-brand">
-                <a class="navbar-item" href="{{ url_for('home') }}">
-                    <img class="mr-3" src="{{ url_for('static', filename='cookie.png') }}" width="32">
-                    <p class="title">
-                        Tasty Tracker
-                    </p>
-                </a>
-            </div>
-            <div id="navbarBasicExample" class="navbar-menu">
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                        <form method="post">
-                            <button name='btn_login' type="submit" class="button is-primary is-inverted">
-                                <strong>{{ vm.login_msg }}</strong>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </div>
-</section>
+{% from "hero.html" import hero with context %}
+{{ hero(login_msg) }}
 <section class="section">
     {% from "tile.html" import tile with context %}
     <div class="container">
