@@ -34,7 +34,7 @@
                 <div class="box">
                     <section class="section">
                         <input name="vm_name" class="input is-large" type="text" placeholder="Name of the recipe"
-                               value="{{ vm.name }}">
+                               value="{{ vm.name }}" required pattern=".+">
 
                         <div class="control has-icons-left">
                             <div class="select">
@@ -43,7 +43,7 @@
                                     <option>easy</option>
                                     <option>medium</option>
                                     <option>hard</option>
-                                    <option>very Hard</option>
+                                    <option>very hard</option>
                                 </select>
                             </div>
                             <p class="icon is-left">

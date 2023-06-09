@@ -23,6 +23,7 @@ class Database:
         try:
             cursor.execute(query)
             return cursor.fetchall()
+
         finally:
             connection.commit()
             cursor.close()
