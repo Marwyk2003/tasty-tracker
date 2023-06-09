@@ -23,22 +23,29 @@ drop view if exists top_recipes;
 drop view if exists recent_recipes;
 
 drop function if exists add_ingredient;
+drop function if exists add_all_ingredients;
+drop function if exists update_recipe;
+drop function if exists add_all_tags;
+drop function if exists last_modified;
+drop function if exists shopping_list;
+drop function if exists users_notes;
 drop function if exists tags_from_recipe;
+drop function if exists products_from_recpie;
+drop function if exists restrictions_from_recipe;
 drop function if exists basic_from_recipe;
 drop function if exists comments_from_recipe;
 drop function if exists comments_from_comment;
 drop function if exists recipes_with_products;
-drop function if exists products_from_recpie;
-drop function if exists add_all_ingredients;
-drop function if exists add_all_tags;
+drop function if exists comment_trigger;
 drop function if exists add_like;
 drop function if exists del_like;
 drop function if exists is_liked;
 drop function if exists login;
-drop function if exists shopping_list;
-drop function if exists users_notes;
-drop function if exists update_recipe;
-drop function if exists last_modified;
+
+
+
+
+
 
 
 drop type if exists difficulty_enum;

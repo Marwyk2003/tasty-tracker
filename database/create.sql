@@ -59,7 +59,7 @@ CREATE TABLE recipes (
 	difficulty           difficulty_enum,
 	preparation_time     interval,
 	body                 text[] NOT NULL,
-	source_type 	     integer,
+	source_type 	     integer NOT NULL CHECK(source_type >=0 AND source_type <=2) DEFAULT 0,
 	id_source 	     integer,
 	CONSTRAINT pk_recipes PRIMARY KEY (id_recipe)
 );
@@ -127,10 +127,11 @@ CREATE TABLE notes (
 
 CREATE TABLE comments (
 	id_comment 	     serial,
-	id_recipe 	     integer NOT NULL, --we need to add trigger to make sure that id_recipe = parent.id_recipe
+	id_recipe 	     integer NOT NULL,
 	id_user 	     integer NOT NULL,
-	id_parent 	     integer,
+	id_parent 	     integer REFERENCES comments,
 	body 		     text NOT NULL,
+	added_at         timestamp DEFAULT CURRENT_DATE NOT NULL,
 	CONSTRAINT pk_comments PRIMARY KEY(id_comment)
 );
 --CONSTRAINTS
@@ -221,7 +222,7 @@ CREATE OR REPLACE FUNCTION last_modified(id_recipe_ int)
 RETURNS timestamp AS
 $$
   BEGIN
-    RETURN COALESCE((SELECT MAX(archivised) FROM archival_recipes WHERE id_recipe_=id_recipe),(SELECT added_at FROM recipes WHERE id_recipe_=id_recipe));
+    RETURN COALESCE((SELECT MAX(added_at) FROM archival_recipes WHERE id_recipe_=id_recipe),(SELECT added_at FROM recipes WHERE id_recipe_=id_recipe));
   END;
 $$LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION shopping_list(list int[])
@@ -234,11 +235,11 @@ $$
   END;
 $$LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION users_notes(id_recipe_ int, id_user_ int)   -- tu trzeba sprawdzić, czy użytkownik jest autorem przepisu
+CREATE OR REPLACE FUNCTION users_notes(id_recipe_ int, id_user_ int)
 RETURNS TABLE(id_note int, body text) AS
 $$
   BEGIN
-  RETURN QUERY SELECT notes.id_note, notes.body FROM notes WHERE id_recipe=id_recipe_;
+  RETURN QUERY SELECT notes.id_note, notes.body FROM notes WHERE id_recipe=id_recipe_ AND id_user=id_user_;
   END;
 $$LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION tags_from_recipe(recipe integer)
@@ -298,7 +299,7 @@ RETURNS TABLE(username varchar(40),body text,id_comment integer)  AS $$
 DECLARE
 BEGIN
   RETURN QUERY SELECT users.username,comments.body,comments.id_comment FROM comments JOIN users USING(id_user)
-  WHERE id_recipe=recipe AND id_parent IS NULL;
+  WHERE id_recipe=recipe AND id_parent IS NULL AND comments.added_at>last_modified(recipe);
 END;
 $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION recipes_with_products(list varchar(60)[])
@@ -355,6 +356,18 @@ $$
   END IF;
   end;
 $$LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION comment_trigger() 
+RETURNS trigger AS 
+$$
+	BEGIN
+		IF NEW.id_parent IS NOT NULL AND NEW.id_recipe!=(SELECT id_recipe FROM comments WHERE id_comment=NEW.id_parent)
+			THEN RAISE EXCEPTION 'Parent comments recipe is different than this comments recipe';
+		END IF;
+		RETURN NEW;
+	END;
+$$LANGUAGE plpgsql;
+CREATE TRIGGER comment_trg BEFORE INSERT OR UPDATE ON comments
+FOR EACH ROW EXECUTE FUNCTION comment_trigger();
 --VIEWS
 CREATE OR REPLACE VIEW recipe_list AS
 SELECT recipes.id_recipe,recipes.name,recipes.difficulty,recipes.preparation_time,added_at,COUNT(users_liked.id_user) AS likes
