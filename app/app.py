@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, abort
 
 from viewmodels.RecipeList import RecipeList
 from viewmodels.RecipeForm import RecipeForm
@@ -35,7 +35,10 @@ def home():
 def recipe(rid):
     global USER_ID
     vm = Recipe(db, int(rid), USER_ID)
-    vm.load()
+    try:
+        vm.load()
+    except IndexError:
+        abort(404)
     if request.method == 'GET':
         return render_template('recipe.html', vm=vm, login_msg=login_msg())
     elif request.method == 'POST' and 'btn_login' in request.form:
@@ -58,7 +61,12 @@ def edit(rid):
     global USER_ID
     if request.method == 'GET':
         vm = Recipe(db, rid, USER_ID)
-        vm.load()
+        try:
+            vm.load()
+        except ValueError:
+            abort(404)
+        if USER_ID is None or USER_ID != vm.author_id:
+            abort(403)
         return render_template('recipe_form.html', vm=vm, login_msg=login_msg())
     elif request.method == 'POST' and 'btn_login' in request.form:
         if USER_ID is None:
@@ -88,6 +96,8 @@ def edit(rid):
 def new():
     global USER_ID
     if request.method == 'GET':
+        if USER_ID is None:
+            abort(403)
         vm = Recipe(db, None, USER_ID)
         return render_template('recipe_form.html', vm=vm, login_msg=login_msg())
     elif request.method == 'POST' and 'btn_login' in request.form:
@@ -120,10 +130,10 @@ def login():
     if request.method == 'GET':
         return render_template('login.html')
     elif request.method == 'POST':
-        login = Login(db)
+        login_vm = Login(db)
         username = request.form.get('username')
         password = request.form.get('password')
-        USER_ID = login.login(username, password)
+        USER_ID = login_vm.login(username, password)
         print(f'Now logged in as: {USER_ID}', flush=True)
         if USER_ID is None:
             return redirect(url_for('login'))
