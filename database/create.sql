@@ -280,7 +280,7 @@ CREATE OR REPLACE FUNCTION basic_from_recipe(recipe integer)
 RETURNS TABLE(name varchar(100), author varchar(40), author_id integer, shape shape_enum, added_at timestamp, body text[], difficulty difficulty_enum, preparation_time interval, likes bigint)  AS $$
 DECLARE
 BEGIN
-  RETURN QUERY SELECT recipe_info.name, username, recipe_info.id_user, recipe_info.shape, recipe_info.added_at, recipe_info.body, recipe_info.difficulty, recipe_info.preparation_time, COUNT(*) FROM recipe_info 
+  RETURN QUERY SELECT recipe_info.name, username, recipe_info.id_user, recipe_info.shape, recipe_info.added_at, recipe_info.body, recipe_info.difficulty, recipe_info.preparation_time, COUNT(users_liked.id_user) FROM recipe_info 
   LEFT JOIN users_liked USING(id_recipe)
   WHERE id_recipe=recipe
   GROUP BY recipe_info.name, username, recipe_info.shape, recipe_info.added_at, recipe_info.body, recipe_info.difficulty, recipe_info.preparation_time, recipe_info.id_user;
