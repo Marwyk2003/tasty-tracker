@@ -43,7 +43,7 @@ class RecipeForm:
         # TODO
 
         # update ingredients
-        ing = [x for x in self.ingredients if x != ['', '', '']]
+        ing = [x for x in self.ingredients if x != ['.', '1.0', 'g']]
         if len(ing) > 0:
             names, amounts, units = zip(*ing)
             names = list(names)

@@ -12,7 +12,7 @@ class Recipe:
         self.img = ''
         self.body = ''
         self.author_url = ''
-        self.ingredients = [('', '', '') for x in range(15)]
+        self.ingredients = [('', '', '', False) for x in range(15)]
         self.tags = ()
         self.constraints = ()
         self.comments = ()
@@ -33,6 +33,9 @@ class Recipe:
         self.comments = self.get_comments()
         self.liked = self.is_liked()
 
+    def load_empty(self):
+        self.ingredients = [['.', '1.0', 'g', False]] * 15
+
     def get_body(self):
         query = self.db.exec(
             f'''
@@ -48,8 +51,8 @@ class Recipe:
                 SELECT * from products_from_recpie({self.id});
             '''
         )
-        res = [list(x) for x in query]
-        res += [['', '', '']] * (15 - len(res))
+        res = [list(x) + [True] for x in query]
+        res += [['.', '1.0', 'g', False]] * (15 - len(res))
         return res
 
     def get_tags(self):

@@ -99,6 +99,7 @@ def new():
         if USER_ID is None:
             abort(403)
         vm = Recipe(db, None, USER_ID)
+        vm.load_empty()
         return render_template('recipe_form.html', vm=vm, login_msg=login_msg())
     elif request.method == 'POST' and 'btn_login' in request.form:
         if USER_ID is None:

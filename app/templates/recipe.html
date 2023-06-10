@@ -108,10 +108,12 @@
                         <table>
                             <tbody>
                             {% for ing in vm.ingredients %}
+                            {% if ing[3] %}
                             <tr>
                                 <td>{{ing[0]}}</td>
                                 <td>{{ing[1]}} {{ing[2]}}</td>
                             </tr>
+                            {% endif %}
                             {% endfor %}
                             </tbody>
                         </table>

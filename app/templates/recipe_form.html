@@ -91,12 +91,12 @@
                         {% for x in range(15) %}
                         <div class="control">
                             <input name="vm_ingredient_name_{{ x }}" class="input is-expanded is-small" type="text"
-                                   placeholder="name" value="{{ vm.ingredients[x][0] }}">
+                                   placeholder="name" value="{{ vm.ingredients[x][0] }}" required>
                         </div>
                         <div class="field has-addons">
                             <div class="control">
                                 <input name="vm_ingredient_amount_{{ x }}" class="input is-small" type="text"
-                                       placeholder="amount" value="{{ vm.ingredients[x][1] }}">
+                                       placeholder="amount" value="{{ vm.ingredients[x][1] }}" required pattern="[1-9][0-9]*(\.[0-9]+)?">
                             </div>
                             <div class="select is-small">
                                 <select name="vm_ingredient_unit_{{ x }}">

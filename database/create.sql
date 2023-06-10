@@ -345,7 +345,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION login(fusername varchar(40), fhash_password char(64))
 RETURNS integer AS
 $$
-  declare 
+  declare
     id int;
   begin
   SELECT id_user INTO id
@@ -1549,8 +1549,6 @@ SELECT add_ingredient(71, 'mixed peel', 1, 50, 'g');
 SELECT add_ingredient(71, 'medium eggs', 7, 2, 'piece');
 SELECT add_ingredient(71, 'cinnamon', 1, 1, 'tsp');
 SELECT add_ingredient(71, 'mixed spice', 1, 1, 'tsp');
-SELECT add_ingredient(71, 'caster sugar', 5, 150, 'g');
-SELECT add_ingredient(71, 'butter', 7, 25, 'g');
 SELECT add_ingredient(72, 'butter', 7, 130, 'g');
 SELECT add_ingredient(72, 'light brown soft sugar', 5, 130, 'g');
 SELECT add_ingredient(72, 'eggs', 7, 2, 'piece');
@@ -1614,7 +1612,6 @@ SELECT add_ingredient(78, 'salt', 1, 1, 'pinch');
 SELECT add_ingredient(78, 'milk', 7, 4, 'tbsp');
 SELECT add_ingredient(78, 'icing sugar', 5, 100, 'g');
 SELECT add_ingredient(78, 'elderflower cordial', 1, 4, 'tbsp');
-SELECT add_ingredient(78, 'lemon zest', 1, 1, 'piece');
 SELECT add_ingredient(79, 'butter', 7, 125, 'g');
 SELECT add_ingredient(79, 'dark chocolate', 5, 150, 'g');
 SELECT add_ingredient(79, 'light muscovado sugar', 5, 225, 'g');
